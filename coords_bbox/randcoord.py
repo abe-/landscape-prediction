@@ -2,9 +2,13 @@
 
 import json
 import random
+from datetime import datetime
 import numpy as np
 
+random.seed(datetime.now())
+
 # Online tool to retrieve bbox lat/lon boundaries:
+# http://bboxfinder.com
 
 lat0 = -11.813588
 lon0 = -59.227295
@@ -21,7 +25,7 @@ for i in range(npoints):
 	lat = np.random.uniform(lat0, lat1)
 	lon = np.random.uniform(lon1, lon0)
 	point = {}
-	point["id"] = str(i)
+	point["id"] = str(i+480)
 	point["latitude"] = str(lat)
 	point["longitude"] = str(lon)
 	data.append(point)

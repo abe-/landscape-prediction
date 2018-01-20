@@ -62,7 +62,7 @@ model.compile(loss='mean_absolute_error', optimizer='adam')
 train_generator = SequenceGenerator(train_file, train_sources, nt, batch_size=batch_size, shuffle=True)
 val_generator = SequenceGenerator(val_file, val_sources, nt, batch_size=batch_size, N_seq=N_seq_val)
 
-lr_schedule = lambda epoch: 0.002 if epoch < 75 else 0.0002    # start with lr of 0.001 and then drop to 0.0001 after 75 epochs
+lr_schedule = lambda epoch: 0.0035 if epoch < 75 else 0.00035    # start with lr of 0.001 and then drop to 0.0001 after 75 epochs
 callbacks = [LearningRateScheduler(lr_schedule)]
 if save_model:
     if not os.path.exists(WEIGHTS_DIR): os.mkdir(WEIGHTS_DIR)

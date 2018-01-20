@@ -10,4 +10,4 @@ DATA_DIR = '../Data/prednet/Processed/aripuana/'
 WEIGHTS_DIR = '../Data/prednet/Models/'
 
 # Where results (prediction plots and evaluation file) will be saved.
-RESULTS_SAVE_DIR = './ee_results-aripuana/'
+RESULTS_SAVE_DIR = '../Exports/prednet/ee_results-aripuana/'

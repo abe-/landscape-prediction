@@ -3,7 +3,7 @@ SEQ="0209-1"
 SIZE=64
 INITIAL=23
 NT=10
-MODEL="aripuana/64-bueno"
+MODEL="./"
 FUTURE=10
 while getopts n:s:i:l:m:f: option
 do

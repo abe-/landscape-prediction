@@ -3,7 +3,7 @@
 SIZE=64
 INITIAL=0
 NT=10
-MODEL="ee_model_data_keras2-aripuana"
+MODEL="./"
 
 while getopts s:i:l:m: option
 do

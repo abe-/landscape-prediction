@@ -13,13 +13,13 @@ categories = ['all']
 # Were initially chosen randomly such that one of the city recordings was used for validation and one of each category was used for testing.
 
 val_recordings = []
-for i in range(50):
-	randomtile = "%04d" % randint(119, 399) + "-0"
+for i in range(80):
+	randomtile = "%04d" % randint(119, 559) + "-0"
 	val_recordings.append(('all', randomtile))
 
 test_recordings = []
 for i in range(8):
-	randomtile = "%04d" % randint(119,399)
+	randomtile = "%04d" % randint(119,559)
         randomtile0 = randomtile + "-0"
         randomtile1 = randomtile + "-1"
         test_recordings.append(('all', randomtile0))

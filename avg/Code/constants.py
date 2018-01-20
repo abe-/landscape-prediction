@@ -68,25 +68,25 @@ def set_test_dir(directory):
     FULL_HEIGHT, FULL_WIDTH = get_test_frame_dims()
 
 # root directory for all data
-DATA_DIR = get_dir('../../Data/')
+DATA_DIR = get_dir('../../Data/avg/')
 # directory of unprocessed training frames
 #TRAIN_DIR = os.path.join(DATA_DIR, 'Ms_Pacman/Train/')
-TRAIN_DIR = '../../Train-hm/'
+TRAIN_DIR = '../../Data/Train-aripuana_128/'
 # directory of unprocessed test frames
 #TEST_DIR = os.path.join(DATA_DIR, 'Ms_Pacman/Test/')
-TEST_DIR = '../../Test-hm/'
+TEST_DIR = '../../Data/Train-aripuana-dis/'
 # Directory of processed training clips.
 # hidden so finder doesn't freeze w/ so many files. DON'T USE `ls` COMMAND ON THIS DIR!
 #TRAIN_DIR_CLIPS = get_dir(os.path.join(DATA_DIR, '.Clips/'))
-TRAIN_DIR_CLIPS = '../../.clips-m20/'
+TRAIN_DIR_CLIPS = '../../Data/avg/clips-aripuana/'
 # For processing clips. l2 diff between frames must be greater than this
-MOVEMENT_THRESHOLD = 20 #orig: 100
+MOVEMENT_THRESHOLD = 100 #orig: 100
 # total number of processed clips in TRAIN_DIR_CLIPS
 NUM_CLIPS = len(glob(TRAIN_DIR_CLIPS + '*'))
 
 # the height and width of the full frames to test on. Set in avg_runner.py or process_data.py main.
-FULL_HEIGHT = 256
-FULL_WIDTH = 256
+FULL_HEIGHT = 128
+FULL_WIDTH = 128
 # the height and width of the patches to train on
 TRAIN_HEIGHT = TRAIN_WIDTH = 32
 
@@ -117,7 +117,7 @@ def clear_save_name():
 
 
 # root directory for all saved content
-SAVE_DIR = get_dir('../../Save/')
+SAVE_DIR = get_dir('../../Data/avg/Save/')
 
 # inner directory to differentiate between runs
 SAVE_NAME = 'Default/'
@@ -144,7 +144,7 @@ ADVERSARIAL = True
 # the training minibatch size
 BATCH_SIZE = 8 # orig: 8
 # the number of history frames to give as input to the network
-HIST_LEN = 4
+HIST_LEN = 10
 
 ##
 # Loss parameters

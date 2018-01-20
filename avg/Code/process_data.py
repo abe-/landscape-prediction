@@ -67,7 +67,8 @@ def main():
 
     # set train frame dimensions
     assert os.path.exists(c.TRAIN_DIR)
-    c.FULL_HEIGHT, c.FULL_WIDTH = c.get_train_frame_dims()
+    # AGF 19/01/2018
+    # c.FULL_HEIGHT, c.FULL_WIDTH = c.get_train_frame_dims()
 
     ##
     # Process data for training

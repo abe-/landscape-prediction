@@ -21,7 +21,7 @@ from time import sleep
 
 # setup of headless xvfb display
 
-display = Display(visible=0, size=(1154, 669)) # to obtain 1024x512 screengrabs
+display = Display(visible=0, size=(585, 669)) # to obtain 1024x512 screengrabs
 display.start()
 
 
@@ -61,20 +61,23 @@ def open_browser():
 filename = sys.argv[1]
 points = json.load(open(filename+'.json'))
 
-outputdir = "./Train-" + filename + "/"
+outputdir = "../Data/Train-" + filename + "/"
 if not os.path.exists(outputdir): os.makedirs(outputdir)
 
-count = 0
+count = 8
 for count in range(len(points)):
-  if count > 8:
+  if count > 84:
     point = points[count]
-    folder = "{:04d}".format(200+int(point["id"]))
+    folder = filename + "-" + point["id"]
+
+    tfold = os.path.join(outputdir, folder)
+    if not os.path.exists(tfold): os.makedirs(tfold)
 
     lat = str(point["latitude"])
     lng = str(point["longitude"])
 
     print "---"
-    print folder + "," + point["id"] + "," + lat + "," + lng
+    print point["id"] + "," + lat + "," + lng
 
     driver = open_browser()
 
@@ -97,27 +100,7 @@ for count in range(len(points)):
         driver.execute_script("var i3=document.getElementsByClassName('sideToolBar')[0];if(i3) i3.style.display='none';")
         driver.execute_script("var i4=document.getElementsByClassName('customControl')[0];if(i4) i4.style.display='none';")
 
-        fn = outputdir + folder + "/" + "{:03.0f}".format(frame) + ".png"
-	tmp = outputdir+"{:03.0f}".format(frame)+".png"	
-	driver.save_screenshot(tmp)
+        fn = os.path.join(outputdir, folder, "{:03.0f}".format(frame) + ".png")	
+	driver.save_screenshot(fn)
 
     driver.quit()
-
-    numtiles = 2
-    for frame in range(0,33):
-	tmp = outputdir+"{:03.0f}".format(frame)+".png"
-        for tile in range(numtiles):
-                tiledir = outputdir+folder+"-"+str(tile)+"/"
-                if not os.path.exists(tiledir):
-                        os.makedirs(tiledir)
-
-        print "Croping frame " + str(frame)
-
-        if numtiles == 32:
-		cmd ="/usr/local/bin/convert "+ os.path.join(tmp)+ " -crop 4x2@ +repage +adjoin "+ outputdir+folder+"-%d/"+"{:03.0f}".format(frame) + ".png"
-		subprocess.call(cmd,shell=True)
-
-	elif numtiles == 2:
-		cmd ="/usr/local/bin/convert "+ os.path.join(tmp)+ " -crop 2x1@ +repage +adjoin "+ outputdir+folder+"-%d/"+"{:03.0f}".format(frame) + ".png"
-		subprocess.call(cmd,shell=True)
-display.stop()

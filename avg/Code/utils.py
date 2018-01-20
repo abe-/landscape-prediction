@@ -1,11 +1,14 @@
 import tensorflow as tf
 import numpy as np
 from scipy.ndimage import imread
+from scipy.misc import imresize
 from glob import glob
 import os
 
 import constants as c
 from tfutils import log10
+
+desired_im_sz = (64,64)
 
 ##
 # Data
@@ -83,17 +86,32 @@ def get_full_clips(data_dir, num_clips, num_rec_out=1):
     # get a random clip of length HIST_LEN + num_rec_out from each episode
     for clip_num, ep_dir in enumerate(ep_dirs):
         ep_frame_paths = sorted(glob(os.path.join(ep_dir, '*')))
-        start_index = np.random.choice(len(ep_frame_paths) - (c.HIST_LEN + num_rec_out - 1))
-        clip_frame_paths = ep_frame_paths[start_index:start_index + (c.HIST_LEN + num_rec_out)]
+	# AGF 19/01/2018
+	if (len(ep_frame_paths) == 33):
+        	start_index = np.random.choice(len(ep_frame_paths) - (c.HIST_LEN + num_rec_out - 1))
+        	clip_frame_paths = ep_frame_paths[start_index:start_index + (c.HIST_LEN + num_rec_out)]
 
         # read in frames
-        for frame_num, frame_path in enumerate(clip_frame_paths):
-            frame = imread(frame_path, mode='RGB')
-            norm_frame = normalize_frames(frame)
+        	for frame_num, frame_path in enumerate(clip_frame_paths):
+            		frame = imread(frame_path, mode='RGB')
 
-            clips[clip_num, :, :, frame_num * 3:(frame_num + 1) * 3] = norm_frame
+           		# AGF 19/01/2018
+            		# frame = process_im(frame, desired_im_sz)
+
+            		norm_frame = normalize_frames(frame)
+
+            		clips[clip_num, :, :, frame_num * 3:(frame_num + 1) * 3] = norm_frame
 
     return clips
+
+# AGF 19/01/2018 - comes from prednet process_kitti.py
+def process_im(im, desired_sz):
+    target_ds = float(desired_sz[0])/im.shape[0]
+    im = imresize_images(im, (desired_sz[0], int(np.round(target_ds * im.shape[1]))))
+    d = int((im.shape[1] - desired_sz[1]) / 2)
+    im = im[:, d:d+desired_sz[1]]
+    return im
+
 
 # AGF 31/12/2017
 def get_full_clips_predict(data_dir, num_clips, num_rec_out=1):
@@ -126,6 +144,10 @@ def get_full_clips_predict(data_dir, num_clips, num_rec_out=1):
         # read in frames
         for frame_num, frame_path in enumerate(clip_frame_paths):
             frame = imread(frame_path, mode='RGB')
+
+	    # AGF 19/01/2018
+	    # frame = process_im(frame, desired_im_sz) 
+
             norm_frame = normalize_frames(frame)
 
             clips[clip_num, :, :, frame_num * 3:(frame_num + 1) * 3] = norm_frame
