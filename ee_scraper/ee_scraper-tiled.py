@@ -66,7 +66,7 @@ if not os.path.exists(outputdir): os.makedirs(outputdir)
 
 count = 8
 for count in range(len(points)):
-  if count > 84:
+  if count > 826:
     point = points[count]
     folder = filename + "-" + point["id"]
 

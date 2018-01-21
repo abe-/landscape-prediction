@@ -3,31 +3,54 @@ import numpy as np
 from scipy.misc import imresize
 from scipy.ndimage import imread
 import hickle as hkl
-from ee_settings import *
+from ee_settings_mg import *
 from random import randint
+from PIL import ImageFile
+ImageFile.LOAD_TRUNCATED_IMAGES = True
 
 desired_im_sz = (64,64)
 categories = ['all']
 
-# Recordings used for validation and testing.
-# Were initially chosen randomly such that one of the city recordings was used for validation and one of each category was used for testing.
+if not os.path.exists(DATA_DIR): os.mkdir(DATA_DIR)
+
+# VALIDATION SEQUENCES
 
 val_recordings = []
-for i in range(80):
-	randomtile = "%04d" % randint(119, 559) + "-0"
-	val_recordings.append(('all', randomtile))
+try:
+	_, folders, _ = os.walk(VAL_DIR).next()
+	for f in folders:
+		val_recordings.append(('all', os.path.join(VAL_DIR, f)))
+except StopIteration:
+	pass
+ #for i in range(80):
+ #	randomtile = "%04d" % randint(119, 559) + "-0"
+ #	val_recordings.append(('all', randomtile))
+
+
+
+
+
+# TEST SEQUENCES
 
 test_recordings = []
-for i in range(8):
-	randomtile = "%04d" % randint(119,559)
-        randomtile0 = randomtile + "-0"
-        randomtile1 = randomtile + "-1"
-        test_recordings.append(('all', randomtile0))
-        test_recordings.append(('all', randomtile1))
+try:
+	_, folders, _ = os.walk(TEST_DIR).next()
+	for f in folders:
+		test_recordings.append(('all', os.path.join(TEST_DIR, f)))
+except StopIteration:
+	pass
 
-#val_recordings = [('all', '0101-0'),('all', '0101-1'),('all', '0101-2'),('all', '0101-3'),('all', '0101-4'),('all', '0101-5'),('all', '0101-6'),('all', '0101-7'), ('all', '0101-8'),('all', '0101-9'),('all', '0101-10'),('all', '0101-11'),('all', '0101-12'),('all', '0101-13'),('all', '0101-14'),('all', '0101-15'),('all', '0101-16'),('all', '0101-17'),('all', '0101-18'),('all', '0101-19'),('all', '0101-20'),('all', '0101-21'),('all', '0101-22'),('all', '0101-23'),('all', '0101-24'),('all', '0101-25'),('all', '0101-26'),('all', '0101-27'),('all', '0101-28'),('all', '0101-29'),('all', '0101-30'),('all', '0101-31')]
-#test_recordings = [('all', '0102-0'),('all', '0102-1'),('all', '0102-2'),('all', '0102-3'),('all', '0102-4'),('all', '0102-5'),('all', '0102-6'),('all', '0102-7'), ('all', '0102-8'),('all', '0102-9'),('all', '0102-10'),('all', '0102-11'),('all', '0102-12'),('all', '0102-13'),('all', '0102-14'),('all', '0102-15'),('all', '0102-16'),('all', '0102-17'),('all', '0102-18'),('all', '0102-19'),('all', '0102-20'),('all', '0102-21'),('all', '0102-22'),('all', '0102-23'),('all', '0102-24'),('all', '0102-25'),('all', '0102-26'),('all', '0102-27'),('all', '0102-28'),('all', '0102-29'),('all', '0102-30'),('all', '0102-31')]
+#for i in range(8):
+#	randomtile = "%04d" % randint(119,559)
+#        randomtile0 = randomtile + "-0"
+#        randomtile1 = randomtile + "-1"
+#        test_recordings.append(('all', randomtile0))
+#        test_recordings.append(('all', randomtile1))
 
+
+
+
+# TRAIN SEQUENCIES and image datasets
 
 # Create image datasets.
 # Processes images and saves them in train, val, test splits.
@@ -40,14 +63,14 @@ def process_data():
         c_dir = TRAIN_DIR
         try:
 		_, folders, _ = os.walk(c_dir).next()
-        	splits['train'] += [(c, f) for f in folders if (c, f) not in not_train]
+        	splits['train'] += [(c, os.path.join(TRAIN_DIR,f)) for f in folders if (c, f) not in not_train]
 	except StopIteration:
 		pass
     for split in splits:
         im_list = []
         source_list = []  # corresponds to recording that image came from
         for category, folder in splits[split]:
-            im_dir = os.path.join(TRAIN_DIR, folder + '/')
+            im_dir = os.path.join(folder + '/')
             try:
 		_, _, files = os.walk(im_dir).next()
             	im_list += [im_dir + f for f in sorted(files)]
@@ -56,12 +79,17 @@ def process_data():
 		pass
         print 'Creating ' + split + ' data: ' + str(len(im_list)) + ' images'
         X = np.zeros((len(im_list),) + desired_im_sz + (3,), np.uint8)
-        for i, im_file in enumerate(im_list):
-            im = imread(im_file, mode='RGB')
-            X[i] = process_im(im, desired_im_sz)
-
-        hkl.dump(X, os.path.join(DATA_DIR, 'X_' + split + '.hkl'))
-        hkl.dump(source_list, os.path.join(DATA_DIR, 'sources_' + split + '.hkl'))
+        fileOK = True
+	for i, im_file in enumerate(im_list):
+	    try: 
+            	im = imread(im_file, mode='RGB')
+            	X[i] = process_im(im, desired_im_sz)
+	    except IOError:
+		fileOK = False
+		pass
+	if fileOK:
+        	hkl.dump(X, os.path.join(DATA_DIR, 'X_' + split + '.hkl'))
+        	hkl.dump(source_list, os.path.join(DATA_DIR, 'sources_' + split + '.hkl'))
 
 
 # resize and crop image

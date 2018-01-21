@@ -4,7 +4,7 @@ import numpy as np
 from scipy.misc import imresize
 from scipy.ndimage import imread
 import hickle as hkl
-from ee_settings import *
+from ee_settings_mg import *
 from random import randint
 
 desired_im_sz = (64,64)

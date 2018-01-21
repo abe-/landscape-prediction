@@ -3,7 +3,7 @@ mkdir "$1-tiles";
 cd "$1-tiles";
 
 for i in $( ls ../$1 ); do
-	for j in `seq 0 7`; do
+	for j in `seq 0 1`; do
 		mkdir "$i-$j";
 	done
 done
@@ -17,12 +17,12 @@ for i in $( ls ); do
 		count=0
 		var=0
 		for j in $( ls ); do
-			let "var = (count - 1) % 6"
+			#let "var = (count - 1) % 6"
 			#if [ $var -eq 0 ]; then
-			if [ $count -gt 0 ]; then
-				convert -crop 4x2@ +repage +adjoin $j ../../"$1-tiles"/"$i-%01d"/$j;
-			fi
-			let "count = count + 1"
+			#if [ $count -gt 0 ]; then
+			convert -resize 128x64 -crop 2x1@ +repage +adjoin $j ../../"$1-tiles"/"$i-%01d"/$j;
+			#fi
+			#let "count = count + 1"
 		done
 		cd ..;
 done

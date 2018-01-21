@@ -13,7 +13,7 @@ from keras.optimizers import Adam
 
 from prednet import PredNet
 from data_utils import SequenceGenerator
-from ee_settings import *
+from ee_settings_mg import *
 
 
 save_model = True  # if weights will be saved
@@ -42,14 +42,14 @@ Ahat_filt_sizes = (3, 3, 3, 3) 	#orig: (3, 3, 3, 3)
 R_filt_sizes = (3, 3, 3, 3) 	#orig: (3, 3, 3, 3)
 layer_loss_weights = np.array([1., 0., 0., 0.])  # weighting for each layer in final loss; "L_0" model:  [1, 0, 0, 0], "L_all": [1, 0.1, 0.1, 0.1]
 layer_loss_weights = np.expand_dims(layer_loss_weights, 1)
-nt = 10 # number of timesteps used for sequences in training # orig: 10
+nt = 15 # number of timesteps used for sequences in training # orig: 10
 time_loss_weights = 1./ (nt - 1) * np.ones((nt,1))  # equally weight all timesteps except the first
 time_loss_weights[0] = 0
 
 
 prednet = PredNet(stack_sizes, R_stack_sizes,
                   A_filt_sizes, Ahat_filt_sizes, R_filt_sizes,
-                  output_mode='error', extrap_start_time=None, return_sequences=True)
+                  output_mode='error', extrap_start_time=10, return_sequences=True)
 
 inputs = Input(shape=(nt,) + input_shape)
 errors = prednet(inputs)  # errors will be (batch_size, nt, nb_layers)
@@ -62,7 +62,7 @@ model.compile(loss='mean_absolute_error', optimizer='adam')
 train_generator = SequenceGenerator(train_file, train_sources, nt, batch_size=batch_size, shuffle=True)
 val_generator = SequenceGenerator(val_file, val_sources, nt, batch_size=batch_size, N_seq=N_seq_val)
 
-lr_schedule = lambda epoch: 0.0035 if epoch < 75 else 0.00035    # start with lr of 0.001 and then drop to 0.0001 after 75 epochs
+lr_schedule = lambda epoch: 0.0015 if epoch < 75 else 0.00015    # start with lr of 0.001 and then drop to 0.0001 after 75 epochs
 callbacks = [LearningRateScheduler(lr_schedule)]
 if save_model:
     if not os.path.exists(WEIGHTS_DIR): os.mkdir(WEIGHTS_DIR)
