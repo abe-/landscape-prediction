@@ -42,7 +42,7 @@ Ahat_filt_sizes = (3, 3, 3, 3) 	#orig: (3, 3, 3, 3)
 R_filt_sizes = (3, 3, 3, 3) 	#orig: (3, 3, 3, 3)
 layer_loss_weights = np.array([1., 0., 0., 0.])  # weighting for each layer in final loss; "L_0" model:  [1, 0, 0, 0], "L_all": [1, 0.1, 0.1, 0.1]
 layer_loss_weights = np.expand_dims(layer_loss_weights, 1)
-nt = 15 # number of timesteps used for sequences in training # orig: 10
+nt = 10 # number of timesteps used for sequences in training # orig: 10
 time_loss_weights = 1./ (nt - 1) * np.ones((nt,1))  # equally weight all timesteps except the first
 time_loss_weights[0] = 0
 
@@ -57,7 +57,7 @@ errors_by_time = TimeDistributed(Dense(1, trainable=False), weights=[layer_loss_
 errors_by_time = Flatten()(errors_by_time)  # will be (batch_size, nt)
 final_errors = Dense(1, weights=[time_loss_weights, np.zeros(1)], trainable=False)(errors_by_time)  # weight errors by time
 model = Model(inputs=inputs, outputs=final_errors)
-model.compile(loss='mean_absolute_error', optimizer='adam')
+model.compile(loss='mean_absolute_error', optimizer='RMSprop')
 
 train_generator = SequenceGenerator(train_file, train_sources, nt, batch_size=batch_size, shuffle=True)
 val_generator = SequenceGenerator(val_file, val_sources, nt, batch_size=batch_size, N_seq=N_seq_val)

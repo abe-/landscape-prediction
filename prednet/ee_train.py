@@ -5,7 +5,7 @@ from six.moves import cPickle
 
 from keras import backend as K
 from keras.models import Model
-from keras.layers import Input, Dense, Flatten
+from keras.layers import Input, Dense, Flatten, Reshape # @kikyou123
 from keras.layers import LSTM
 from keras.layers import TimeDistributed
 from keras.callbacks import LearningRateScheduler, ModelCheckpoint
@@ -53,8 +53,14 @@ prednet = PredNet(stack_sizes, R_stack_sizes,
 
 inputs = Input(shape=(nt,) + input_shape)
 errors = prednet(inputs)  # errors will be (batch_size, nt, nb_layers)
-errors_by_time = TimeDistributed(Dense(1, trainable=False), weights=[layer_loss_weights, np.zeros(1)], trainable=False)(errors)  # calculate weighted error by layer
-errors_by_time = Flatten()(errors_by_time)  # will be (batch_size, nt)
+#errors_by_time = TimeDistributed(Dense(1, trainable=False), weights=[layer_loss_weights, np.zeros(1)], trainable=False)(errors)  # calculate weighted error by layer
+#errors_by_time = Flatten()(errors_by_time)  # will be (batch_size, nt)
+
+# @kikyou123
+errors = Reshape((-1,4))(errors)
+errors_by_time = Dense(1, weights=[layer_loss_weights, np.zeros(1)], trainable=False)(errors)
+errors_by_time = Reshape((10, ))(errors_by_time)
+
 final_errors = Dense(1, weights=[time_loss_weights, np.zeros(1)], trainable=False)(errors_by_time)  # weight errors by time
 model = Model(inputs=inputs, outputs=final_errors)
 model.compile(loss='mean_absolute_error', optimizer='adam')
@@ -66,7 +72,7 @@ lr_schedule = lambda epoch: 0.001 if epoch < 75 else 0.0001    # start with lr o
 callbacks = [LearningRateScheduler(lr_schedule)]
 if save_model:
     if not os.path.exists(WEIGHTS_DIR): os.mkdir(WEIGHTS_DIR)
-    callbacks.append(ModelCheckpoint(filepath=weights_file, monitor='val_loss', save_best_only=False)) # orig: save_best_only=True
+    callbacks.append(ModelCheckpoint(filepath=weights_file, monitor='val_loss', save_best_only=True)) # orig: save_best_only=True
 
 history = model.fit_generator(train_generator, samples_per_epoch / batch_size, nb_epoch, callbacks=callbacks, validation_data=val_generator, validation_steps=N_seq_val / batch_size)
 

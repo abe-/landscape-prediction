@@ -17,7 +17,7 @@ from keras.layers import Input, Dense, Flatten
 
 from prednet import PredNet
 from data_utils import SequenceGenerator
-from ee_settings import *
+from ee_settings_mg import *
 
 from scipy.misc import imsave
 
