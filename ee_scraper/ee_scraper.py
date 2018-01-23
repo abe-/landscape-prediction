@@ -66,15 +66,15 @@ if not os.path.exists(outputdir): os.makedirs(outputdir)
 
 count = 0
 for count in range(len(points)):
-  if count > 8:
+  if count > -1:
     point = points[count]
-    folder = "{:04d}".format(int(point["id"]))
-
+    #folder = "{:04d}".format(count)
+    folder = point["id"]
     lat = str(point["latitude"])
     lng = str(point["longitude"])
 
     print "---"
-    print folder + "," + point["id"] + "," + lat + "," + lng
+    print folder + "," + lat + "," + lng
 
     driver = open_browser()
 
@@ -113,11 +113,12 @@ for count in range(len(points)):
 
         print "Croping frame " + str(frame)
 
+        
         if numtiles == 32:
-		cmd ="/usr/local/bin/convert "+ os.path.join(tmp)+ " -crop 4x2@ +repage +adjoin "+ outputdir+folder+"-%d/"+"{:03.0f}".format(frame) + ".png"
+		cmd ="convert "+ os.path.join(tmp)+ " -crop 4x2@ +repage +adjoin "+ outputdir+folder+"-%d/"+"{:03.0f}".format(frame) + ".png"
 		subprocess.call(cmd,shell=True)
 
 	elif numtiles == 2:
-		cmd ="/usr/local/bin/convert "+ os.path.join(tmp)+ " -crop 2x1@ +repage +adjoin "+ outputdir+folder+"-%d/"+"{:03.0f}".format(frame) + ".png"
+		cmd ="convert "+ os.path.join(tmp)+ " -resize '256x128' -crop 2x1@ +repage +adjoin "+ outputdir+folder+"-%d/"+"{:03.0f}".format(frame) + ".png"
 		subprocess.call(cmd,shell=True)
 display.stop()

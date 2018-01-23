@@ -21,6 +21,10 @@ from time import sleep
 
 # setup of headless xvfb display
 
+# firefox: 512x512 -> ( 585, 669 )
+
+zoom = str(13)
+
 display = Display(visible=0, size=(585, 669)) # to obtain 1024x512 screengrabs
 display.start()
 
@@ -64,9 +68,9 @@ points = json.load(open(filename+'.json'))
 outputdir = "../Data/Train-" + filename + "/"
 if not os.path.exists(outputdir): os.makedirs(outputdir)
 
-count = 8
+count = 0
 for count in range(len(points)):
-  if count > 826:
+  if count > -1:
     point = points[count]
     folder = filename + "-" + point["id"]
 
@@ -83,7 +87,7 @@ for count in range(len(points)):
 
     for frame in range(0, 33):
 
-        url="https://earthengine.google.com/iframes/timelapse_player_embed.html#v="+lat+","+lng+",11,latLng&t="+"{:.1f}".format(frame/10.)
+        url="https://earthengine.google.com/iframes/timelapse_player_embed.html#v="+lat+","+lng+","+zoom+",latLng&t="+"{:.1f}".format(frame/10.)
         driver.get(url)
 
         try:
@@ -101,8 +105,16 @@ for count in range(len(points)):
         driver.execute_script("var i4=document.getElementsByClassName('customControl')[0];if(i4) i4.style.display='none';")
 
         fn = os.path.join(outputdir, folder, "{:03.0f}".format(frame) + ".png")
-	driver.save_screenshot(fn)
-
+        driver.save_screenshot(fn)
+    
     driver.quit()
 
+    _, _, files = os.walk( tfold ).next()
+    ct = 0
+    for f in files:
+        print "Croping frame " + str(count)
+        f = os.path.join( tfold, f )
+        cmd ="convert "+ f + " -crop 256x256+96+96 "+ f
+        subprocess.call(cmd,shell=True)
+        count = count + 1
 display.stop()
