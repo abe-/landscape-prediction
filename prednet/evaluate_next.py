@@ -18,13 +18,13 @@ from keras.layers import Input, Dense, Flatten
 
 from prednet import PredNet
 from data_utils import SequenceGenerator
-from ee_settings_mg import *
+from ee_settings import *
 
 from scipy.misc import imsave
 
 n_plot = 40
-batch_size = 10
-nt = 10
+batch_size = 4
+nt = 15
 numtests = 1
 startF = 0
 

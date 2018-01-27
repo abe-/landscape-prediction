@@ -3,12 +3,12 @@ import numpy as np
 from scipy.misc import imresize
 from scipy.ndimage import imread
 import hickle as hkl
-from ee_settings_mg import *
+from ee_settings import *
 from random import randint
 from PIL import ImageFile
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 
-desired_im_sz = (64,64)
+desired_im_sz = (HEIGHT,WIDTH)
 categories = ['all']
 
 if not os.path.exists(DATA_DIR): os.mkdir(DATA_DIR)

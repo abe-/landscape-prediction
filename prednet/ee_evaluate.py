@@ -4,6 +4,7 @@ Calculates mean-squared error and plots predictions.
 '''
 
 import os
+import sys, argparse
 import numpy as np
 from six.moves import cPickle
 import matplotlib
@@ -17,19 +18,29 @@ from keras.layers import Input, Dense, Flatten
 
 from prednet import PredNet
 from data_utils import SequenceGenerator
-from ee_settings_mg import *
-
 from scipy.misc import imsave
 
+from ee_settings import *
+
 n_plot = 40
-batch_size = 10
+batch_size = 4
 nt = 15
-numtests = 8
+numtests = 10
+extrap = 10 
+
+parser = argparse.ArgumentParser()
+parser.add_argument('-ft', help="fine-tune multistep: add extrap time")
+args=parser.parse_args()
 
 weights_file = os.path.join(WEIGHTS_DIR, 'prednet_ee_weights.hdf5')
 json_file = os.path.join(WEIGHTS_DIR, 'prednet_ee_model.json')
 test_file = os.path.join(DATA_DIR, 'X_test.hkl')
 test_sources = os.path.join(DATA_DIR, 'sources_test.hkl')
+
+if args.ft is not None:
+	extrap = int(args.ft)
+	weights_file = os.path.join(WEIGHTS_DIR, 'prednet_ee_weights-extrapfinetuned.hdf5')
+	json_file = os.path.join(WEIGHTS_DIR, 'prednet_ee_model-extrapfinetuned.json')
 
 # Load trained model
 f = open(json_file, 'r')
@@ -40,7 +51,8 @@ train_model.load_weights(weights_file)
 
 # Create testing model (to output predictions)
 layer_config = train_model.layers[1].get_config()
-layer_config['output_mode'] = 'prediction'
+layer_config['output_mode'] = 'prediction' #'prediction'
+layer_config['extrap_start_time'] = extrap;
 data_format = layer_config['data_format'] if 'data_format' in layer_config else layer_config['dim_ordering']
 test_prednet = PredNet(weights=train_model.layers[1].get_weights(), **layer_config)
 input_shape = list(train_model.layers[0].batch_input_shape[1:])
