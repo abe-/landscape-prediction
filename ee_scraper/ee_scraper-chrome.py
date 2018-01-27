@@ -2,7 +2,7 @@ import json
 import os
 import sys
 import subprocess
-from pyvirtualdisplay import Display
+#from pyvirtualdisplay import Display
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -19,14 +19,12 @@ from time import sleep
 #
 
 
+zoom = str(9)
+
 # setup of headless xvfb display
 
-# firefox: 512x512 -> ( 585, 669 )
-
-zoom = str(13)
-
-display = Display(visible=0, size=(585, 669)) # to obtain 1024x512 screengrabs
-display.start()
+#display = Display(visible=0, size=(1154, 669)) # to obtain 1024x512 screengrabs
+#display.start()
 
 
 
@@ -50,7 +48,13 @@ class canvas_check():
 # Creates a browser instance that goes through a proxy
 
 def open_browser():
-    return webdriver.Firefox()
+    options = webdriver.ChromeOptions()
+    options.binary_location = '/Applications/Google Chrome Canary.app/Contents/MacOS/Google Chrome Canary'
+    options.add_argument('window-size=512, 512')
+    options.add_argument('headless')
+
+    driver = webdriver.Chrome(chrome_options=options)
+    return driver
 
 
 
@@ -72,7 +76,7 @@ count = 0
 for count in range(len(points)):
   if count > -1:
     point = points[count]
-    folder = filename + "-" + point["id"]
+    folder = point["id"]
 
     tfold = os.path.join(outputdir, folder)
     if not os.path.exists(tfold): os.makedirs(tfold)
@@ -81,7 +85,7 @@ for count in range(len(points)):
     lng = str(point["longitude"])
 
     print "---"
-    print point["id"] + "," + lat + "," + lng
+    print folder + "," + lat + "," + lng
 
     driver = open_browser()
 
@@ -106,15 +110,23 @@ for count in range(len(points)):
 
         fn = os.path.join(outputdir, folder, "{:03.0f}".format(frame) + ".png")
         driver.save_screenshot(fn)
-    
+
     driver.quit()
 
-    _, _, files = os.walk( tfold ).next()
-    ct = 0
-    for f in files:
-        print "Croping frame " + str(count)
-        f = os.path.join( tfold, f )
-        cmd ="convert "+ f + " -crop 256x256+96+96 "+ f
-        subprocess.call(cmd,shell=True)
-        count = count + 1
-display.stop()
+    numtiles = 0
+    for frame in range(0,33):
+	tmp = outputdir+"{:03.0f}".format(frame)+".png"
+        for tile in range(numtiles):
+                tiledir = outputdir+folder+"-"+str(tile)+"/"
+                if not os.path.exists(tiledir):
+                        os.makedirs(tiledir)
+
+        print "Croping frame " + str(frame)
+
+        if numtiles == 32:
+            cmd ="/opt/ImageMagick/bin/convert "+ os.path.join(tmp)+ " -crop 4x2@ +repage +adjoin "+ outputdir+folder+"-%d/"+"{:03.0f}".format(frame) + ".png"
+            subprocess.call(cmd,shell=True)
+        elif numtiles == 2:
+            cmd ="/opt/ImageMagick/bin/convert "+ os.path.join(tmp)+ " -crop 2x1@ +repage +adjoin "+ outputdir+folder+"-%d/"+"{:03.0f}".format(frame) + ".png"
+            subprocess.call(cmd,shell=True)
+#display.stop()
