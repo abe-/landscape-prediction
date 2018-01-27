@@ -23,7 +23,7 @@ from scipy.misc import imsave
 from ee_settings import *
 
 n_plot = 40
-batch_size = 4
+batch_size = 16
 nt = 15
 numtests = 10
 extrap = 10 

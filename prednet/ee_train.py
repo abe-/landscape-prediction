@@ -29,20 +29,20 @@ val_file = os.path.join(DATA_DIR, 'X_val.hkl')
 val_sources = os.path.join(DATA_DIR, 'sources_val.hkl')
 
 # Training parameters
-nb_epoch = 150 #orig:150 
+nb_epoch = 50 #orig:150 
 batch_size =  16 #orig: 4
-samples_per_epoch = 500 #orig: 500
+samples_per_epoch = 200 #orig: 500
 N_seq_val = 100  # orig: 100 number of sequences to use for validation
 
 # Model parameters
 n_channels, im_height, im_width = (3, HEIGHT, WIDTH)
 input_shape = (n_channels, im_height, im_width) if K.image_data_format() == 'channels_first' else (im_height, im_width, n_channels)
-stack_sizes = (n_channels, 48, 96, 192) #orig: (n_c, 48, 96, 196)
+stack_sizes = (n_channels, 48, 96, 192, 192) #orig: (n_c, 48, 96, 196)
 R_stack_sizes = stack_sizes
-A_filt_sizes = (3, 3, 3) 		#orig: (3, 3, 3)
-Ahat_filt_sizes = (3, 3, 3, 3) 	#orig: (3, 3, 3, 3)
-R_filt_sizes = (3, 3, 3, 3) 	#orig: (3, 3, 3, 3)
-layer_loss_weights = np.array([1., 0., 0., 0.])  # weighting for each layer in final loss; "L_0" model:  [1, 0, 0, 0], "L_all": [1, 0.1, 0.1, 0.1]
+A_filt_sizes = (3, 3, 3, 3) 		#orig: (3, 3, 3)
+Ahat_filt_sizes = (3, 3, 3, 3, 3) 	#orig: (3, 3, 3, 3)
+R_filt_sizes = (3, 3, 3, 3, 3) 	#orig: (3, 3, 3, 3)
+layer_loss_weights = np.array([1., 0., 0., 0., 0.])  # weighting for each layer in final loss; "L_0" model:  [1, 0, 0, 0], "L_all": [1, 0.1, 0.1, 0.1]
 layer_loss_weights = np.expand_dims(layer_loss_weights, 1)
 nt = 10  # number of timesteps used for sequences in training # orig: 10
 time_loss_weights = 1./ (nt - 1) * np.ones((nt,1))  # equally weight all timesteps except the first
@@ -56,7 +56,13 @@ prednet = PredNet(stack_sizes, R_stack_sizes,
 
 inputs = Input(shape=(nt,) + input_shape)
 errors = prednet(inputs)  # errors will be (batch_size, nt, nb_layers)
-errors_by_time = TimeDistributed(Dense(1, trainable=False, activity_regularizer=regularizers.l1(0.01)), weights=[layer_loss_weights, np.zeros(1)], trainable=False)(errors)  # calculate weighted error by layer
+
+errors_by_time = TimeDistributed(Dense(1, trainable=False), weights=[layer_loss_weights, np.zeros(1)], trainable=False)(errors)  # calculate weighted error by layer
+
+# +regularizer (doesn't seem to produce annything interesting)
+#errors_by_time = TimeDistributed(Dense(1, trainable=False, activity_regularizer=regularizers.l1(0.0001)), weights=[layer_loss_weights, np.zeros(1)], trainable=False)(errors)  # calculate weighted error by layer
+
+
 errors_by_time = Flatten()(errors_by_time)  # will be (batch_size, nt)
 
 # @kikyou123

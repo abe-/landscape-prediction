@@ -40,9 +40,9 @@ val_file = os.path.join(DATA_DIR, 'X_val.hkl')
 val_sources = os.path.join(DATA_DIR, 'sources_val.hkl')
 
 # Training parameters
-nb_epoch = 150
+nb_epoch = 10
 batch_size = 16
-samples_per_epoch = 500
+samples_per_epoch = 200
 N_seq_val = 100  # number of sequences to use for validation
 lr = 0.0025 # initial learning rate
 
@@ -70,7 +70,7 @@ model.compile(loss=extrap_loss, optimizer='adam')
 train_generator = SequenceGenerator(train_file, train_sources, nt, batch_size=batch_size, shuffle=True, output_mode='prediction')
 val_generator = SequenceGenerator(val_file, val_sources, nt, batch_size=batch_size, N_seq=N_seq_val, output_mode='prediction')
 
-lr_schedule = lambda epoch: lr if epoch < 75 else 0.1*lr    # start with lr of 0.001 and then drop to 0.0001 after 75 epochs
+lr_schedule = lambda epoch: lr if epoch < nb_epoch/2 else 0.1*lr    # start with lr of 0.001 and then drop to 0.0001 after 75 epochs
 
 #lr_schedule = lambda epoch: lr*(2-1.9*epoch/float(nb_epoch))
 callbacks = [LearningRateScheduler(lr_schedule)]
