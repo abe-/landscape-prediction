@@ -25,7 +25,7 @@ from time import sleep
 
 zoom = str(13)
 
-display = Display(visible=0, size=(585, 669)) # to obtain 1024x512 screengrabs
+display = Display(visible=0, size=(585, 669))
 display.start()
 
 
@@ -50,7 +50,9 @@ class canvas_check():
 # Creates a browser instance that goes through a proxy
 
 def open_browser():
-    return webdriver.Firefox()
+    driver = webdriver.Firefox()
+    #driver = webdriver.Firefox().fullscreen_window();
+    return driver
 
 
 
@@ -112,9 +114,10 @@ for count in range(len(points)):
     _, _, files = os.walk( tfold ).next()
     ct = 0
     for f in files:
-        print "Croping frame " + str(count)
+        print "Croping frame " + str(ct)
         f = os.path.join( tfold, f )
-        cmd ="convert "+ f + " -crop 256x256+96+96 "+ f
+        #cmd ="convert "+ f + " -crop 256x256+96+96 "+ f
+        cmd = "convert " + f + " -resize 128x128! " + f
         subprocess.call(cmd,shell=True)
-        count = count + 1
+        ct = ct + 1
 display.stop()

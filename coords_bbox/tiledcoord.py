@@ -39,14 +39,36 @@ random.seed(datetime.now())
 #lat1 = -10.652510
 #lon1 = -58.450012
 
-# jiparana
-lat0 = -12.576010
-lon0 = -62.913208
-lat1 = -8.939340
-lon1 = -60.446777
+# yuzhni island (Russia)(1)
+#lat0,lon0,lat1,lon1=[71.635993,53.162842,73.131322,55.458984]
+#zoom = 10
+#key="yu"
 
-key="ji"
-zoom = 9
+# yuzhni island (Russia)(2)
+#lat0,lon0,lat1,lon1=[73.201317,54.843750,74.116047,56.997070]
+#key="yu1"
+#zoom=10
+
+# yu2
+lat0,lon0,lat1,lon1=[74.132576,55.728149,74.849236,59.891968]
+key="yu2"
+zoom=10
+
+# yu3
+lat0,lon0,lat1,lon1=[74.873624,56.343384,75.336721,60.842285]
+key="yu3"
+zoom=10
+
+# jiparana
+#lat0,lon0,lat1,lon1=[-12.343831,-62.641296,-10.734638,-61.042786]
+#zoom = 11
+#key = "ji"
+
+# crops
+#39.056111,-98.536389,39.156111,-98.436389
+#lat0,lon0,lat1,lon1=[38.975425,-99.091187,39.757880,-97.800293]
+#key="crops"
+#zoom = 13
 
 # coords transformed from EPSG:4326 (lat/lon) to EPSG:3857 (web mercator)
 

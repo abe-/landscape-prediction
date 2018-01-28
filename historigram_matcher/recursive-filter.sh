@@ -1,11 +1,12 @@
 for i in $( ls -d */ ); do 
 echo "Entering dir " $i; 
 cd $i; 
-echo "Changing the colour levels of 000.png"
-convert 000.png -level 25% 000.png; 
-echo "Adjusting the rest of histograms to 000.png"
+first=`ls|head -n1`
+echo "Changing the colour levels of" $first
+convert $first -level 25% $first; 
+echo "Adjusting the rest of histograms to " $first
 for j in $( ls|tail -n32 ); 
-do bash ../histmatch.sh 000.png $j $j; 
+do bash ../histmatch.sh $first $j $j; 
 done; 
 cd ..; 
 done;
