@@ -40,11 +40,11 @@ val_file = os.path.join(DATA_DIR, 'X_val.hkl')
 val_sources = os.path.join(DATA_DIR, 'sources_val.hkl')
 
 # Training parameters
-nb_epoch = 10
-batch_size = 16
-samples_per_epoch = 200
-N_seq_val = 100  # number of sequences to use for validation
-lr = 0.0025 # initial learning rate
+nb_epoch = 50
+batch_size = 4
+samples_per_epoch = 80
+N_seq_val = 32  # number of sequences to use for validation
+lr = 0.001 # initial learning rate
 
 # Load t+1 model
 f = open(orig_json_file, 'r')

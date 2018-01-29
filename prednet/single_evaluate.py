@@ -93,7 +93,7 @@ def copy_to_tmp():
 
 # Create image datasets.
 def process_data():
-	desired_im_sz = (64,64)
+	desired_im_sz = (HEIGHT, WIDTH)
 	categories = ['all']
 
 	next_recordings = []

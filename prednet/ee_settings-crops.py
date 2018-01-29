@@ -1,5 +1,5 @@
-WIDTH=64
-HEIGHT=64
+WIDTH=128
+HEIGHT=128
 
 # Where data will be saved if you run process_ee.py
 TRAIN_DIR = '../Data/Train-crops/'

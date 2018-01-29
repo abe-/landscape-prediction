@@ -7,7 +7,7 @@ import hickle as hkl
 from ee_settings import *
 from random import randint
 
-desired_im_sz = (64,64)
+desired_im_sz = (HEIGHT, WIDTH)
 categories = ['all']
 
 parser = argparse.ArgumentParser()
