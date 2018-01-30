@@ -19,13 +19,7 @@ from time import sleep
 #
 
 
-zoom = str(9)
-
-# setup of headless xvfb display
-
-#display = Display(visible=0, size=(1154, 669)) # to obtain 1024x512 screengrabs
-#display.start()
-
+zoom = str(13)
 
 
 
@@ -123,10 +117,23 @@ for count in range(len(points)):
 
         print "Croping frame " + str(frame)
 
+	# if divide into 32 tiles:
+
         if numtiles == 32:
+
             cmd ="/opt/ImageMagick/bin/convert "+ os.path.join(tmp)+ " -crop 4x2@ +repage +adjoin "+ outputdir+folder+"-%d/"+"{:03.0f}".format(frame) + ".png"
             subprocess.call(cmd,shell=True)
+
+	# if divide into 2 tiles
+
         elif numtiles == 2:
+
             cmd ="/opt/ImageMagick/bin/convert "+ os.path.join(tmp)+ " -crop 2x1@ +repage +adjoin "+ outputdir+folder+"-%d/"+"{:03.0f}".format(frame) + ".png"
             subprocess.call(cmd,shell=True)
-#display.stop()
+
+	# if only one tile:
+	
+	else: 
+
+	    cmd ="/opt/ImageMagick/bin/convert "+ os.path.join(tmp)+ " -resize 128x128! " + os.path.join(tmp)
+	    subprocess.call(cmd,shell=True)
