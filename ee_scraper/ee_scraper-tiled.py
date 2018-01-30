@@ -23,7 +23,7 @@ from time import sleep
 
 # firefox: 512x512 -> ( 585, 669 )
 
-zoom = str(13)
+zoom = str(8)
 
 display = Display(visible=0, size=(585, 669))
 display.start()
