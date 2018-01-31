@@ -11,7 +11,7 @@ ImageFile.LOAD_TRUNCATED_IMAGES = True
 desired_im_sz = (HEIGHT,WIDTH)
 categories = ['all']
 
-if not os.path.exists(DATA_DIR): os.mkdir(DATA_DIR)
+if not os.path.exists(DATA_DIR): os.makedirs(DATA_DIR)
 
 # VALIDATION SEQUENCES
 
