@@ -73,33 +73,33 @@ coords = []
 #39.056111,-98.536389,39.156111,-98.436389
 #lat0,lon0,lat1,lon1=[38.975425,-99.091187,39.757880,-97.800293]
 #key="crops"
-#zoom = 13
+#zoom = 12
 
 # edson, kansas (irrigation agriculture)
 coords.append( [ 40.165757,-101.698380,40.239178,-101.553497 ] )
-zoom = 13
+zoom = 12
 key = "edson"
 
 
+# Max zoom in Earth Engine:
 
-
+zoom = min(zoom, 12)
 
 # helper functions
 # http://www.maptiler.org/google-maps-coordinates-tile-bounds-projection/
 # coords transformed from EPSG:4326 (lat/lon) to EPSG:3857 (web mercator)
 
-
 def PixelsToLatLon(x, y, zoom):
 	res = 180 / 256.0 / 2**zoom
-	lat = x*res-180
-	lon = y*res-90
+	lon = x*res-180
+	lat = y*res-90
 	return lat, lon
 
 def LatLonToPixels(lat, lon, zoom):
         "Converts lat/lon to pixel coordinates in given zoom of the EPSG:4326 pyramid"
         res = 180 / 256.0 / 2**zoom
-        x = (180 + lat) / res
-        y = (90 + lon) / res
+        x = (180 + lon) / (res)
+        y = (90 + lat) / res
         return x, y
 
 
