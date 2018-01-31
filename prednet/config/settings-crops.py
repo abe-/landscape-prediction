@@ -1,6 +1,16 @@
 WIDTH=128
 HEIGHT=128
 
+# Hyperparameters
+NT=10
+EXTRAP=5
+NB_EPOCH=100
+SAMPLES_PER_EPOCH=125
+N_SEQ_VAL=32
+BATCH_SIZE=4
+LR=0.002
+
+
 # Where data will be saved if you run process_ee.py
 TRAIN_DIR = '../Data/Train-crops/'
 VAL_DIR = '../Data/Val-crops/'
