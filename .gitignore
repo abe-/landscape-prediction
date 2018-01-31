@@ -95,5 +95,4 @@ include/
 # DATA
 Data/
 Exports/
-test*/
 tmp/
