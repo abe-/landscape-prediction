@@ -73,17 +73,17 @@ coords = []
 #39.056111,-98.536389,39.156111,-98.436389
 #lat0,lon0,lat1,lon1=[38.975425,-99.091187,39.757880,-97.800293]
 #key="crops"
-#zoom = 12
+#zoom = 12.2
 
 # edson, kansas (irrigation agriculture)
 coords.append( [ 40.165757,-101.698380,40.239178,-101.553497 ] )
-zoom = 12
+zoom = 12.2
 key = "edson"
 
 
 # Max zoom in Earth Engine:
 
-zoom = min(zoom, 12)
+zoom = min(zoom, 12.2)
 
 # helper functions
 # http://www.maptiler.org/google-maps-coordinates-tile-bounds-projection/
