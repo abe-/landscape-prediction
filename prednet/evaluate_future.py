@@ -25,12 +25,12 @@ from scipy.misc import imresize
 from scipy.ndimage import imread
 import hickle as hkl
 
-from ee_settings import *
+from config.settings import *
 
 
 
-batch_size = 4
-nt = 15
+batch_size = BATCH_SIZE
+nt = NT
 numtests = 1
 extrap = None 
 
@@ -180,23 +180,7 @@ def execute_test():
 	gs.update(wspace=0., hspace=0.)
 	plot_save_dir = os.path.join(RESULTS_SAVE_DIR, 'prediction_plots/')
 	if not os.path.exists(plot_save_dir): os.mkdir(plot_save_dir)
-	plot_idx = np.random.permutation(X_test.shape[0])[:1]
-	for i in plot_idx:
-	    for t in range(nt):
-		plt.subplot(gs[t])
-		plt.imshow(X_test[i,t], interpolation='none')
-		plt.tick_params(axis='both', which='both', bottom='off', top='off', left='off', right='off', labelbottom='off', labelleft='off')
-		if t==0: plt.ylabel('Actual', fontsize=10)
-
-		plt.subplot(gs[t + nt])
-		plt.imshow(X_hat[i,t], interpolation='none')
-		plt.tick_params(axis='both', which='both', bottom='off', top='off', left='off', right='off', labelbottom='off', labelleft='off')
-		if t==0: plt.ylabel('Predicted', fontsize=10)
-
-	    plt.savefig(plot_save_dir +  'plot_' + str(i) + '.png')
-	    plt.clf()
-
-
+	
 	# Output the sequence of all the predicted images
 	for test in range(numtests):
 	    testdir = "tile-" + str(test)

@@ -3,7 +3,7 @@ import numpy as np
 from scipy.misc import imresize
 from scipy.ndimage import imread
 import hickle as hkl
-from ee_settings import *
+from config.settings import *
 from random import randint
 from PIL import ImageFile
 ImageFile.LOAD_TRUNCATED_IMAGES = True

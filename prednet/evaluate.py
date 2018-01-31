@@ -20,13 +20,13 @@ from prednet import PredNet
 from data_utils import SequenceGenerator
 from scipy.misc import imsave
 
-from ee_settings import *
+from config.settings import *
 
 n_plot = 10
-batch_size = 4
-nt = 15
+batch_size = BATCH_SIZE
+nt = NT
 numtests = 9
-extrap = 10 
+extrap = None 
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-ft', help="fine-tune multistep: add extrap time")

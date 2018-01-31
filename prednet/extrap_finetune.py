@@ -15,7 +15,7 @@ from keras.callbacks import LearningRateScheduler, ModelCheckpoint
 
 from prednet import PredNet
 from data_utils import SequenceGenerator
-from ee_settings import *
+from config.settings import *
 
 # Define loss as MAE of frame predictions after t=0
 # It doesn't make sense to compute loss on error representation, since the error isn't wrt ground truth when extrapolating.
@@ -24,8 +24,8 @@ def extrap_loss(y_true, y_hat):
     y_hat = y_hat[:, 1:]
     return 0.5 * K.mean(K.abs(y_true - y_hat), axis=-1)  # 0.5 to match scale of loss when trained in error mode (positive and negative errors split)
 
-nt = 15
-extrap_start_time = 10  # starting at this time step, the prediction from the previous time step will be treated as the actual input
+nt = NT
+extrap_start_time = EXTRAP  # starting at this time step, the prediction from the previous time step will be treated as the actual input
 orig_weights_file = os.path.join(WEIGHTS_DIR, 'prednet_ee_weights.hdf5')  # original t+1 weights
 orig_json_file = os.path.join(WEIGHTS_DIR, 'prednet_ee_model.json')
 
@@ -40,11 +40,11 @@ val_file = os.path.join(DATA_DIR, 'X_val.hkl')
 val_sources = os.path.join(DATA_DIR, 'sources_val.hkl')
 
 # Training parameters
-nb_epoch = 50
-batch_size = 4
-samples_per_epoch = 80
-N_seq_val = 32  # number of sequences to use for validation
-lr = 0.001 # initial learning rate
+nb_epoch = NB_EPOCH
+batch_size = BATCH_SIZE
+samples_per_epoch = SAMPLES_PER_EPOCH
+N_seq_val = N_SEQ_VAL  # number of sequences to use for validation
+lr = LR # initial learning rate
 
 # Load t+1 model
 f = open(orig_json_file, 'r')
@@ -79,6 +79,11 @@ if save_model:
     callbacks.append(ModelCheckpoint(filepath=extrap_weights_file, monitor='val_loss', save_best_only=True))
 history = model.fit_generator(train_generator, samples_per_epoch / batch_size, nb_epoch, callbacks=callbacks,
                 validation_data=val_generator, validation_steps=N_seq_val / batch_size)
+
+# TODO: write loss and val_loss history to a file
+#loss_history = history_callback.history["loss"]
+#numpy_loss_history = numpy.array(loss_history)
+#np.savetxt("loss_history-ft.txt", numpy_loss_history, delimiter=",")
 
 if save_model:
     json_string = model.to_json()
