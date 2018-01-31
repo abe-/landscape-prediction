@@ -25,7 +25,7 @@ from config.settings import *
 n_plot = 10
 batch_size = BATCH_SIZE
 nt = NT
-numtests = 9
+numtests = 18
 extrap = None 
 
 parser = argparse.ArgumentParser()
@@ -39,6 +39,7 @@ test_sources = os.path.join(DATA_DIR, 'sources_test.hkl')
 
 if args.ft is not None:
 	extrap = int(args.ft)
+	nt = extrap + 5
 	weights_file = os.path.join(WEIGHTS_DIR, 'prednet_ee_weights-extrapfinetuned.hdf5')
 	json_file = os.path.join(WEIGHTS_DIR, 'prednet_ee_model-extrapfinetuned.json')
 
