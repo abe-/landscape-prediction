@@ -1,3 +1,5 @@
+[logo]: https://github.com/adam-p/markdown-here/raw/master/src/common/images/icon48.png "Logo Title Text 2"
+
 git
 python2.7
 python-pip
