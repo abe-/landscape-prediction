@@ -1,3 +1,6 @@
+import os
+
+# Dims of images to train the model
 WIDTH=$width
 HEIGHT=$height
 
@@ -10,26 +13,27 @@ N_SEQ_VAL=$n_seq_val
 BATCH_SIZE=$batch_size
 LR=$lr
 
-
 # For the evaluation stage, number of tests and plots:
 NUM_TESTS=$NUM_TESTS
 NUM_PLOTS=$NUM_PLOTS
 
+# Get dir where file is
+current = os.path.dirname(os.path.realpath(__file__))
 
 # Data dir
-DATA_DIR = '$data_dir'
+DATA_DIR = os.path.join(current, 'Data')
 
 # Where data will be saved if you run process_data.py
-TRAIN_DIR = '$train_dir'
-VAL_DIR = '$val_dir'
-TEST_DIR = '$test_dir'
+TRAIN_DIR = os.path.join( DATA_DIR, 'Train')
+VAL_DIR = os.path.join( DATA_DIR, 'Val')
+TEST_DIR = os.path.join( DATA_DIR, 'Test')
 
 
 # Where model weights and config will be saved if you run train.py or extrap
-MODELS_DIR = '$models_dir'
+MODELS_DIR = os.path.join(current, 'Models')
 
 # Where results (prediction plots and evaluation file) will be saved.
-RESULTS_DIR = '$results_dir'
+RESULTS_DIR = os.path.join(current, 'Exports')
 
 
 #

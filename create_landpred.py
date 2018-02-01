@@ -44,12 +44,6 @@ d={ 'width':128,
     'lr': 0.002,
     'num_tests':18,
     'num_plots':10,
-    'data_dir': 'Data',
-    'train_dir': os.path.join('Data','Train'),
-    'val_dir': os.path.join('Data','Val'),
-    'test_dir': os.path.join('Data','Test'),
-    'models_dir': 'Models',
-    'results_dir': 'Exports',
     'zoom': 12.2,
     'key': key }
 
@@ -80,3 +74,6 @@ copy2(os.path.join('scraper', 'scraper-tiled.py'), PROJECT_DIR)
 copy2(os.path.join('scraper', 'scraper-chrome.py'), PROJECT_DIR)
 print "Copying utils files..."
 copy2(os.path.join('prednet', 'random_distributor.py'), PROJECT_DIR)
+copy2(os.path.join('historigram_matcher', 'histmatch.sh'), PROJECT_DIR)
+copy2(os.path.join('historigram_matcher', 'recursive-filter.sh'), PROJECT_DIR)
+copy2(os.path.join('image-tiles', 'data-augmentation.sh'), PROJECT_DIR)
