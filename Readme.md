@@ -1,4 +1,9 @@
-[logo]: https://github.com/adam-p/markdown-here/raw/master/src/common/images/icon48.png "Logo Title Text 2"
+# Landscape Prediction
+
+# Installation
+
+This project is is written in python 2.7. This language is preinstalled in mac osx as well as in standard linux distributions. If your system is windows, you'll need to download it from [here](https://www.python.org/downloads/).
+
 
 git
 python2.7
