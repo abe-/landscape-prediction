@@ -3,7 +3,7 @@ import numpy as np
 from scipy.misc import imresize
 from scipy.ndimage import imread
 import hickle as hkl
-from config.settings import *
+from settings import *
 from random import randint
 from PIL import ImageFile
 ImageFile.LOAD_TRUNCATED_IMAGES = True
@@ -81,7 +81,7 @@ def process_data():
         X = np.zeros((len(im_list),) + desired_im_sz + (3,), np.uint8)
         fileOK = True
 	for i, im_file in enumerate(im_list):
-	    try: 
+	    try:
             	im = imread(im_file, mode='RGB')
             	X[i] = process_im(im, desired_im_sz)
 	    except IOError:

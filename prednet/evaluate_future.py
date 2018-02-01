@@ -25,14 +25,14 @@ from scipy.misc import imresize
 from scipy.ndimage import imread
 import hickle as hkl
 
-from config.settings import *
+from settings import *
 
 
 
 batch_size = BATCH_SIZE
 nt = NT
 numtests = 1
-extrap = None 
+extrap = None
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-ft', help="fine-tune multistep: number of the first predicted frame")
@@ -41,19 +41,19 @@ args=parser.parse_args()
 
 
 # Model files and image directories
-weights_file = os.path.join(WEIGHTS_DIR, 'prednet_ee_weights.hdf5')
-json_file = os.path.join(WEIGHTS_DIR, 'prednet_ee_model.json')
+weights_file = os.path.join(MODELS_DIR, 'prednet_ee_weights.hdf5')
+json_file = os.path.join(MODELS_DIR, 'prednet_ee_model.json')
 test_file = os.path.join(DATA_DIR, 'X_single.hkl')
 test_sources = os.path.join(DATA_DIR, 'sources_single.hkl')
 
 if args.ft is not None:
 	extrap = int(args.ft)
-	weights_file = os.path.join(WEIGHTS_DIR, 'prednet_ee_weights-extrapfinetuned.hdf5')
-	json_file = os.path.join(WEIGHTS_DIR, 'prednet_ee_model-extrapfinetuned.json')
+	weights_file = os.path.join(MODELS_DIR, 'prednet_ee_weights-extrapfinetuned.hdf5')
+	json_file = os.path.join(MODELS_DIR, 'prednet_ee_model-extrapfinetuned.json')
 	nt = extrap+32
 
 if args.dir is not None:
-	inputdir = args.dir[0]	
+	inputdir = args.dir[0]
 
 
 # Create tmpdir if it does not exist
@@ -76,7 +76,7 @@ for f in os.listdir(tmpdir):
 def copy_to_tmp():
 	print "[DEBUG] Input dir: " + inputdir
 	for root, _, files in os.walk(inputdir):
-		for f in files:  
+		for f in files:
 			name = os.path.join(root,f)
 			copy2(name, tmpdir)
 
@@ -180,7 +180,7 @@ def execute_test():
 	gs.update(wspace=0., hspace=0.)
 	plot_save_dir = os.path.join(RESULTS_SAVE_DIR, 'prediction_plots/')
 	if not os.path.exists(plot_save_dir): os.mkdir(plot_save_dir)
-	
+
 	# Output the sequence of all the predicted images
 	for test in range(numtests):
 	    testdir = "tile-" + str(test)

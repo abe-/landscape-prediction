@@ -15,12 +15,12 @@ from keras import regularizers
 
 from prednet import PredNet
 from data_utils import SequenceGenerator
-from config.settings import *
+from settings import *
 
 
 save_model = True  # if weights will be saved
-weights_file = os.path.join(WEIGHTS_DIR, 'prednet_ee_weights.hdf5')  # where weights will be saved
-json_file = os.path.join(WEIGHTS_DIR, 'prednet_ee_model.json')
+weights_file = os.path.join(MODELS_DIR, 'prednet_ee_weights.hdf5')  # where weights will be saved
+json_file = os.path.join(MODELS_DIR, 'prednet_ee_model.json')
 
 # Data files
 train_file = os.path.join(DATA_DIR, 'X_train.hkl')
@@ -29,7 +29,7 @@ val_file = os.path.join(DATA_DIR, 'X_val.hkl')
 val_sources = os.path.join(DATA_DIR, 'sources_val.hkl')
 
 # Training parameters
-nb_epoch = NB_EPOCH #orig:150 
+nb_epoch = NB_EPOCH #orig:150
 batch_size =  BATCH_SIZE #orig: 4
 samples_per_epoch = SAMPLES_PER_EPOCH #orig: 500
 N_seq_val = N_SEQ_VAL # orig: 100 number of sequences to use for validation
@@ -79,13 +79,13 @@ val_generator = SequenceGenerator(val_file, val_sources, nt, batch_size=batch_si
 
 lr_schedule = lambda epoch: lr if epoch < nb_epoch/2 else 0.1*lr    # start with lr of 0.001 and then drop to 0.0001 after 75 epochs
 
-#lr_schedule = lambda epoch: lr * (1 -0.95*epoch/float(nb_epoch))  
+#lr_schedule = lambda epoch: lr * (1 -0.95*epoch/float(nb_epoch))
 
 callbacks = [LearningRateScheduler(lr_schedule)]
 
 
 if save_model:
-    if not os.path.exists(WEIGHTS_DIR): os.mkdir(WEIGHTS_DIR)
+    if not os.path.exists(MODELS_DIR): os.mkdir(MODELS_DIR)
     callbacks.append(ModelCheckpoint(filepath=weights_file, monitor='val_loss', save_best_only=True)) # orig: save_best_only=True
 
 history = model.fit_generator(train_generator, samples_per_epoch / batch_size, nb_epoch, callbacks=callbacks, validation_data=val_generator, validation_steps=N_seq_val / batch_size)
@@ -102,8 +102,7 @@ if save_model:
 
 if save_model:
     outputdir="nt"+str(nt)+"_b"+str(batch_size)+"_e"+str(nb_epoch)+"_s"+str(samples_per_epoch)+"_v"+str(N_seq_val)+"_lr"+str(lr)
-    outputdir = os.path.join(WEIGHTS_DIR, outputdir)
+    outputdir = os.path.join(MODELS_DIR, outputdir)
     if not os.path.exists(outputdir): os.mkdir(outputdir)
     copy2(weights_file, outputdir)
     copy2(json_file, outputdir)
-

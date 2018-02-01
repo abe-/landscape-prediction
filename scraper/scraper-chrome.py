@@ -1,6 +1,6 @@
 import json
 import os
-import sys
+import sys, argparse
 import subprocess
 #from pyvirtualdisplay import Display
 from selenium import webdriver
@@ -10,17 +10,7 @@ from selenium.webdriver.common.by import By
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.proxy import *
 from time import sleep
-
-
-
-
-####################
-#  INITIAL SETUP
-#
-
-
-zoom = str(13)
-
+from settings import *
 
 
 
@@ -60,17 +50,24 @@ def open_browser():
 
 # Iterates through json with geo points
 
-filename = sys.argv[1]
-points = json.load(open(filename+'.json'))
+parser = argparse.ArgumentParser()
+parser.add_argument('--json', metavar='json',
+                    help='json file with points information')
 
-outputdir = "../Data/Train-" + filename + "/"
+args = parser.parse_args()
+if args.json and os.path.exists(args.json):
+    points = json.load(open(args.json))
+else:
+    points = json.load(open(KEY+".json"))
+
+outputdir = os.path.join(TRAIN_DIR)
 if not os.path.exists(outputdir): os.makedirs(outputdir)
 
 count = 0
 for count in range(len(points)):
   if count > -1:
     point = points[count]
-    folder = point["id"]
+    folder = KEY + "-" + point["id"]
 
     tfold = os.path.join(outputdir, folder)
     if not os.path.exists(tfold): os.makedirs(tfold)
@@ -85,7 +82,7 @@ for count in range(len(points)):
 
     for frame in range(0, 33):
 
-        url="https://earthengine.google.com/iframes/timelapse_player_embed.html#v="+lat+","+lng+","+zoom+",latLng&t="+"{:.1f}".format(frame/10.)
+        url="https://earthengine.google.com/iframes/timelapse_player_embed.html#v="+lat+","+lng+","+str(ZOOM)+",latLng&t="+"{:.1f}".format(frame/10.)
         driver.get(url)
 
         try:
@@ -107,33 +104,34 @@ for count in range(len(points)):
 
     driver.quit()
 
+    _, _, files = os.walk( tfold ).next()
+    ct = 0
     numtiles = 0
-    for frame in range(0,33):
-	tmp = outputdir+"{:03.0f}".format(frame)+".png"
+    for f in files:
+        print "Croping frame " + str(ct)
+        f = os.path.join( tfold, f )
+
         for tile in range(numtiles):
-                tiledir = outputdir+folder+"-"+str(tile)+"/"
+                tiledir = os.path.join(outputdir, folder+"-"+str(tile))
                 if not os.path.exists(tiledir):
                         os.makedirs(tiledir)
 
-        print "Croping frame " + str(frame)
 
-	# if divide into 32 tiles:
-
+        # if divide into 32 tiles:
         if numtiles == 32:
 
-            cmd ="/opt/ImageMagick/bin/convert "+ os.path.join(tmp)+ " -crop 4x2@ +repage +adjoin "+ outputdir+folder+"-%d/"+"{:03.0f}".format(frame) + ".png"
+            cmd ="convert "+ f + " -crop 4x2@ +repage +adjoin "+ os.path.join(outputdir,folder+"-%d","{:03.0f}".format(frame) + ".png")
             subprocess.call(cmd,shell=True)
 
-	# if divide into 2 tiles
-
+        # if divide into 2 tiles
         elif numtiles == 2:
 
-            cmd ="/opt/ImageMagick/bin/convert "+ os.path.join(tmp)+ " -crop 2x1@ +repage +adjoin "+ outputdir+folder+"-%d/"+"{:03.0f}".format(frame) + ".png"
+            cmd ="convert "+ f + " -crop 2x1@ +repage +adjoin "+ os.path.join(outputdir,folder+"-%d","{:03.0f}".format(frame) + ".png")
             subprocess.call(cmd,shell=True)
 
-	# if only one tile:
-	
-	else: 
+        # if only one tile:
+        else:
+            cmd ="convert "+ f + " -resize 128x128! " + f
+            subprocess.call(cmd,shell=True)
 
-	    cmd ="/opt/ImageMagick/bin/convert "+ os.path.join(tmp)+ " -resize 128x128! " + os.path.join(tmp)
-	    subprocess.call(cmd,shell=True)
+        ct = ct + 1

@@ -15,7 +15,7 @@ from keras.callbacks import LearningRateScheduler, ModelCheckpoint
 
 from prednet import PredNet
 from data_utils import SequenceGenerator
-from config.settings import *
+from settings import *
 
 # Define loss as MAE of frame predictions after t=0
 # It doesn't make sense to compute loss on error representation, since the error isn't wrt ground truth when extrapolating.
@@ -26,12 +26,12 @@ def extrap_loss(y_true, y_hat):
 
 nt = NT
 extrap_start_time = EXTRAP  # starting at this time step, the prediction from the previous time step will be treated as the actual input
-orig_weights_file = os.path.join(WEIGHTS_DIR, 'prednet_ee_weights.hdf5')  # original t+1 weights
-orig_json_file = os.path.join(WEIGHTS_DIR, 'prednet_ee_model.json')
+orig_weights_file = os.path.join(MODELS_DIR, 'prednet_ee_weights.hdf5')  # original t+1 weights
+orig_json_file = os.path.join(MODELS_DIR, 'prednet_ee_model.json')
 
 save_model = True
-extrap_weights_file = os.path.join(WEIGHTS_DIR, 'prednet_ee_weights-extrapfinetuned.hdf5')  # where new weights will be saved
-extrap_json_file = os.path.join(WEIGHTS_DIR, 'prednet_ee_model-extrapfinetuned.json')
+extrap_weights_file = os.path.join(MODELS_DIR, 'prednet_ee_weights-extrapfinetuned.hdf5')  # where new weights will be saved
+extrap_json_file = os.path.join(MODELS_DIR, 'prednet_ee_model-extrapfinetuned.json')
 
 # Data files
 train_file = os.path.join(DATA_DIR, 'X_train.hkl')
@@ -75,7 +75,7 @@ lr_schedule = lambda epoch: lr if epoch < nb_epoch/2 else 0.1*lr    # start with
 #lr_schedule = lambda epoch: lr*(2-1.9*epoch/float(nb_epoch))
 callbacks = [LearningRateScheduler(lr_schedule)]
 if save_model:
-    if not os.path.exists(WEIGHTS_DIR): os.mkdir(WEIGHTS_DIR)
+    if not os.path.exists(MODELS_DIR): os.mkdir(MODELS_DIR)
     callbacks.append(ModelCheckpoint(filepath=extrap_weights_file, monitor='val_loss', save_best_only=True))
 history = model.fit_generator(train_generator, samples_per_epoch / batch_size, nb_epoch, callbacks=callbacks,
                 validation_data=val_generator, validation_steps=N_seq_val / batch_size)
@@ -93,7 +93,7 @@ if save_model:
 
 if save_model:
     outputdir="nt"+str(nt)+"_b"+str(batch_size)+"_e"+str(nb_epoch)+"_s"+str(samples_per_epoch)+"_v"+str(N_seq_val)+"_lr"+str(lr)
-    outputdir = os.path.join(WEIGHTS_DIR, outputdir)
+    outputdir = os.path.join(MODELS_DIR, outputdir)
     if not os.path.exists(outputdir): os.mkdir(outputdir)
     copy2(extrap_weights_file, outputdir)
     copy2(extrap_json_file, outputdir)

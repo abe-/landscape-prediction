@@ -20,28 +20,28 @@ from prednet import PredNet
 from data_utils import SequenceGenerator
 from scipy.misc import imsave
 
-from config.settings import *
+from settings import *
 
 n_plot = 10
 batch_size = BATCH_SIZE
 nt = NT
 numtests = 18
-extrap = None 
+extrap = None
 
 parser = argparse.ArgumentParser()
 parser.add_argument('-ft', help="fine-tune multistep: add extrap time")
 args=parser.parse_args()
 
-weights_file = os.path.join(WEIGHTS_DIR, 'prednet_ee_weights.hdf5')
-json_file = os.path.join(WEIGHTS_DIR, 'prednet_ee_model.json')
+weights_file = os.path.join(MODELS_DIR, 'prednet_ee_weights.hdf5')
+json_file = os.path.join(MODELS_DIR, 'prednet_ee_model.json')
 test_file = os.path.join(DATA_DIR, 'X_test.hkl')
 test_sources = os.path.join(DATA_DIR, 'sources_test.hkl')
 
 if args.ft is not None:
 	extrap = int(args.ft)
 	nt = extrap + 5
-	weights_file = os.path.join(WEIGHTS_DIR, 'prednet_ee_weights-extrapfinetuned.hdf5')
-	json_file = os.path.join(WEIGHTS_DIR, 'prednet_ee_model-extrapfinetuned.json')
+	weights_file = os.path.join(MODELS_DIR, 'prednet_ee_weights-extrapfinetuned.hdf5')
+	json_file = os.path.join(MODELS_DIR, 'prednet_ee_model-extrapfinetuned.json')
 
 # Load trained model
 f = open(json_file, 'r')
@@ -72,8 +72,8 @@ if data_format == 'channels_first':
 # Compare MSE of PredNet predictions vs. using last frame.  Write results to prediction_scores.txt
 mse_model = np.mean( (X_test[:, 1:] - X_hat[:, 1:])**2 )  # look at all timesteps except the first
 mse_prev = np.mean( (X_test[:, :-1] - X_test[:, 1:])**2 )
-if not os.path.exists(RESULTS_SAVE_DIR): os.mkdir(RESULTS_SAVE_DIR)
-f = open(RESULTS_SAVE_DIR + 'prediction_scores.txt', 'w')
+if not os.path.exists(RESULTS_DIR): os.mkdir(RESULTS_DIR)
+f = open(RESULTS_DIR + 'prediction_scores.txt', 'w')
 f.write("Model MSE: %f\n" % mse_model)
 f.write("Previous Frame MSE: %f" % mse_prev)
 f.close()
@@ -83,7 +83,7 @@ aspect_ratio = float(X_hat.shape[2]) / X_hat.shape[3]
 plt.figure(figsize = (nt, 2*aspect_ratio))
 gs = gridspec.GridSpec(2, nt)
 gs.update(wspace=0., hspace=0.)
-plot_save_dir = os.path.join(RESULTS_SAVE_DIR, 'prediction_plots/')
+plot_save_dir = os.path.join(RESULTS_DIR, 'prediction_plots/')
 if not os.path.exists(plot_save_dir): os.mkdir(plot_save_dir)
 plot_idx = np.random.permutation(X_test.shape[0])[:n_plot]
 for i in plot_idx:

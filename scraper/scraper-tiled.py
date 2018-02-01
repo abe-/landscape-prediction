@@ -1,6 +1,6 @@
 import json
 import os
-import sys
+import sys, argparse
 import subprocess
 from pyvirtualdisplay import Display
 from selenium import webdriver
@@ -10,7 +10,7 @@ from selenium.webdriver.common.by import By
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.proxy import *
 from time import sleep
-
+from settings import *
 
 
 
@@ -22,8 +22,6 @@ from time import sleep
 # setup of headless xvfb display
 
 # firefox: 512x512 -> ( 585, 669 )
-
-zoom = str(13)
 
 display = Display(visible=0, size=(585, 669))
 display.start()
@@ -64,17 +62,24 @@ def open_browser():
 
 # Iterates through json with geo points
 
-filename = sys.argv[1]
-points = json.load(open(filename+'.json'))
+parser = argparse.ArgumentParser()
+parser.add_argument('--json', metavar='json',
+                    help='json file with points information')
 
-outputdir = "../Data/Train-" + filename + "/"
+args = parser.parse_args()
+if args.json and os.path.exists(args.json):
+    points = json.load(open(args.json))
+else:
+    points = json.load(open(KEY+".json"))
+
+outputdir = TRAIN_DIR
 if not os.path.exists(outputdir): os.makedirs(outputdir)
 
 count = 0
 for count in range(len(points)):
   if count > -1:
     point = points[count]
-    folder = filename + "-" + point["id"]
+    folder = KEY + "-" + point["id"]
 
     tfold = os.path.join(outputdir, folder)
     if not os.path.exists(tfold): os.makedirs(tfold)
@@ -89,7 +94,7 @@ for count in range(len(points)):
 
     for frame in range(0, 33):
 
-        url="https://earthengine.google.com/iframes/timelapse_player_embed.html#v="+lat+","+lng+","+zoom+",latLng&t="+"{:.1f}".format(frame/10.)
+        url="https://earthengine.google.com/iframes/timelapse_player_embed.html#v="+lat+","+lng+","+str(ZOOM)+",latLng&t="+"{:.1f}".format(frame/10.)
         driver.get(url)
 
         try:
@@ -108,7 +113,7 @@ for count in range(len(points)):
 
         fn = os.path.join(outputdir, folder, "{:03.0f}".format(frame) + ".png")
         driver.save_screenshot(fn)
-    
+
     driver.quit()
 
     _, _, files = os.walk( tfold ).next()

@@ -7,14 +7,14 @@
 # random_distributor.py
 #
 # Distributes randomly the sequences among
-# TRAIN_DIR, VAL_DIR and TEST_DIR 
-# 
+# TRAIN_DIR, VAL_DIR and TEST_DIR
+#
 
 import os
 import random as random
 from shutil import move
 from datetime import datetime
-from config.settings import *
+from settings import *
 
 random.seed(datetime.now())
 
@@ -23,8 +23,8 @@ root, folders, files = os.walk( TRAIN_DIR ).next()
 # Define number of sequences in each of the main dirs
 
 tot = len(folders)
-num_val = int(tot*0.15)
-num_test = 18
+num_val = min(1,int(tot*0.15))
+num_test = min(1,max(18,tot*0.1));
 
 # Create the folders if needed
 
@@ -37,7 +37,7 @@ random.shuffle(folders)
 move_to_val = folders[0:num_val]
 move_to_test = folders[num_val:num_val+num_test]
 
-print "Moving " + str(num_val) + " sequences to " + VAL_DIR	
+print "Moving " + str(num_val) + " sequences to " + VAL_DIR
 print "Moving " + str(num_test) + " sequences to " + TEST_DIR
 print "Left   " + str(tot-num_val-num_test) + " sequences in " + TRAIN_DIR
 
