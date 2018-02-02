@@ -1,4 +1,4 @@
-img[alt=small] { width: 200px; }
+img[alt=small] { width: 128px; }
 
 # Landscape Prediction
 
