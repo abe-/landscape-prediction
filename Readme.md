@@ -2,7 +2,8 @@
 
 ## Installation
 
-![gif](https://github.com/abe-/landscape-prediction/raw/master/gifs/0353-0.gif)
+![gif](https://github.com/abe-/landscape-prediction/raw/master/gifs/0353-0.gif -128x128)
+![gif](https://github.com/abe-/landscape-prediction/raw/master/gifs/0353-1.gif -128x128)
 
 ### 1. Get the platform
 
