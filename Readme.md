@@ -144,7 +144,9 @@ pip install matplotlib
 pip install pillow
 ```
 ### 5. Finally, rsync to transfer files between computers
+
 rsync is one of the fastests way to transfer files among computers:
+
 If LINUX:
 ```
 sudo apt-get install rsync
@@ -165,7 +167,7 @@ To create a landpred the only you need to give a name. Then, inslde the project'
 ```
 python create_landpred.py LANDPREDNAME
 ```
-Each landpred is a directory that contains all the necessary files to be trained on a properly configured machine. They are placed dierctly inside this main directory. Additionally, each landpred contains three folders:
+Each landpred is a directory initially stored inside the folder "LandPreds". It contains all the necessary files to be trained on a properly configured machine. They are placed dierctly inside this main directory. Additionally, each landpred contains three folders:
 ```
 Data/
 Models/
@@ -173,44 +175,48 @@ Exports/
 ```
 where the datasets, the obtained models and the prediction results will be stored, respectively.
 
-## Second step: train a set of sample data
+## Second step: prepare a set of sample data
 
+The folder "sample-data" contains a dataset of images of a procedurally animated animation. The source code of the generator, written in Processing, is also available.
 
-
-We need to have an initial dataset to test the installation. Cuestión del “name” (key or code) of the project:
-
-cp -r sample_data/* Data/
-
-we edit config/settings.py and replace the existing name with gen0
-- WIDTH, HEIGHT 64
-- NB_EPOCH 3
-
-then:
-
+To train a model with this data, you need to copy these 3 directories (Train, Test, Val) to the Data directory of your landpred. For instance, if the project is named "gen0" and we are inside its main folder, we would run:
+```
+cp -r ../../sample-data/* Data/
+```
+Now we might adjust some settings of our training process. This can be done by editing the settings.py file. For instance, in our case we want the model to work with files of size 64z64px (default is 128x128) and with a learning rate LR of 0.001 (default is 0.002). We edit settings.py and change the corresponding lines:
+```
+WIDTH=64
+HEIGHT= 64
+...
+LR=0.001
+```
+Now we need to prepare the data to be analyzed by the neural network. To do this, we run the command:
+```
 python process_data.py
+```
+It will transform the images into matrices of numbers that will be conveniently store insided the Data folder as well.
 
-it will create:
-../Data/prednet/Processed/gen0
+## Third step: 
 
-
-then we train a model with these data:
-
+Now we are able to train a model with these data:
+```
 python train.py
+```
+The process will display some useful information about how the learning evolves. When finished, it will have created a model inside the Models folder, and made a copy of it inside a separate folder.
 
-
-It will create a Model here:
-
-../Data/prednet/Models/gen0/
-
-
+This model will have being trained to produce the t+1 frame of a sequence of frames. As we are interested in longer predictions, we need to train a bit more the model (to finetune it) so that is can extrapolate several future frames:
+```
 python  extrap_finetune.py
+```
+This will create two additional Model files, the ones corresponding to the finetuned model.
 
-this creates two additional Model files, extrap_finetuned
+## Fourth step: evaluate the model:
 
-To evaluate what the neural network has learnt, we have then:
-
-python evaluate.py
-
+Finally, we need to test the model. To evaluate what the neural network has learnt we need to run:
+```
+python evaluate.py -ft EXTRAP_FRAME
+```
+where EXTRAP_FRAME is the frame number from where extrapolation will start to be produced.
 
 
 
