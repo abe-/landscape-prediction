@@ -216,24 +216,36 @@ Finally, we need to test the model. To evaluate what the neural network has lear
 ```
 python evaluate.py -ft EXTRAP_FRAME
 ```
-where EXTRAP_FRAME is the frame number from where extrapolation will start to be produced.
+where EXTRAP_FRAME is the frame number from where extrapolation will start to be produced. 
 
+This will produce a set of tests and plots displaying the prediction against the actual frames (the so-called "ground truth").
 
+![](https://github.com/abe-/landscape-prediction/raw/master/gifs/plot-4.png)
+
+The tests can be reviewed with a simple processing tool, "tests_viewer", that will animate the results:
+
+![](https://github.com/abe-/landscape-prediction/raw/master/gifs/gen0.gif)
+
+To export either the visualisations of this tool or the tiles themselves as a gif we have the nice convert tool provided by imagemagick:
+```
+convert g???.png  -set delay 25  cn-orig-pred.gif
+```
+
+## Fifth step: produce a longer extrapolation of the prediction
+
+A final script will allow us to produce with the extrap_finetuned model a longar extrapolation:
+```
+python evaluate_future.py Data/Test/0270 -ft 32
+```
+![](https://github.com/abe-/landscape-prediction/raw/master/gifs/gen0-extrapolated.gif)
 
 SI HAGO EJEMPLO EDSON:
 With downloaded data, after scraper -> random-distributor
 settings : nt 1 batch 1 nseqval 1 samples 1
 
 
-convert g???.png  -set delay 25  cn-orig-pred.gif
 
 
-Even when the NN seems to be doing nothing, it has the capacity to clean the datasets, as these images show:
-
-cn-orig-pred.gif
-cn-pred-pred.gif
-
-file:///Users/agfm1n14/Documents/Processing/tests_viewer/cn-pred-pred.gif
 
 
 Host gnd1
@@ -242,10 +254,19 @@ Host gnd1
 	User tm
 	IdentityFile ~/.ssh/tm
 
-
 Host gnd2
 	HostName 35.195.172.252
 	User tm
 	IdentityFile ~/.ssh/tm
 
+Host gnd3
+	HostName 35.189.226.77
+	User tm
+	IdentityFile ~/.ssh/tm
+
+
+Host gnd4
+	HostName 35.195.99.125
+	User tm
+	IdentityFile ~/.ssh/tm
 
