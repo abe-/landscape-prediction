@@ -1,12 +1,10 @@
-img[alt=small] { width: 128px; }
-
 # Landscape Prediction
 
 ## Installation
 
-![small](https://github.com/abe-/landscape-prediction/raw/master/gifs/0353-0.gif)
+<img src="https://github.com/abe-/landscape-prediction/raw/master/gifs/0353-0.gif" width=128px>
 
-![small](https://github.com/abe-/landscape-prediction/raw/master/gifs/0353-1.gif)
+<img src="https://github.com/abe-/landscape-prediction/raw/master/gifs/0353-1.gif" width=128px>
 
 ### 1. Get the platform
 
