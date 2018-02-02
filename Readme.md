@@ -1,24 +1,43 @@
 # Landscape Prediction
 
-# Installation
-
-This project is is written in python 2.7. This language is preinstalled in mac osx as well as in standard linux distributions. If your system is windows, you'll need to download it from [here](https://www.python.org/downloads/).
+## Installation
 
 
-git
-python2.7
-python-pip
-virtualenv
 
-entorno python:
+### 1. Get the platform
 
-:
+This is a project that relies on python2.7, pip, virtualenv and git:
+
+#### python 2.7 + pip + virtualenv
+Linuxes and MacOSX have python 2.7 as preinstalled language. You only need to get pip and virtual env. In case of Debian/Ubuntu, this is achived with:
+```
+sudo apt-get install python-pip
+sudo pip install virtualenv
+```
+In case of MacOSX:
+```
+sudo easy_install pip
+sudo pip install virtualenv
+```
+
+In case of Windows, a good guide to install this platform [can be reached here](http://timmyreilly.azurewebsites.net/python-pip-virtualenv-installation-on-windows/).
+
+#### git as code and documentation repository
+[here's a quick installation guide for Linux/Mac/Win](https://www.atlassian.com/git/tutorials/install-git#linux)
+
+### 2. Clone the project and create its virtual environment
+To retrieve the updated version of this project you need to clone this repository:
+```
 git clone https://github.com/abe-/landscape-prediction.git
-
+```
+Enter then in its folder and create a python environment for it:
+```
 cd landscape-prediction
-
 virtualenv -p /usr/bin/python2.7 env
 source env/bin/activate
+```
+
+### 3.
 
 ** SCRAPER INSTALLATION **
 
