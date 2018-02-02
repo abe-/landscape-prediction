@@ -220,11 +220,11 @@ where EXTRAP_FRAME is the frame number from where extrapolation will start to be
 
 This will produce a set of tests and plots displaying the prediction against the actual frames (the so-called "ground truth").
 
-![](https://github.com/abe-/landscape-prediction/raw/master/gifs/plot-4.png)
+<img src="https://github.com/abe-/landscape-prediction/raw/master/gifs/plot-4.png">
 
 The tests can be reviewed with a simple processing tool, "tests_viewer", that will animate the results:
 
-![](https://github.com/abe-/landscape-prediction/raw/master/gifs/gen0.gif)
+<img src="https://github.com/abe-/landscape-prediction/raw/master/gifs/gen0.gif" width="768">
 
 To export either the visualisations of this tool or the tiles themselves as a gif we have the nice convert tool provided by imagemagick:
 ```
@@ -237,7 +237,7 @@ A final script will allow us to produce with the extrap_finetuned model a longar
 ```
 python evaluate_future.py Data/Test/0270 -ft 32
 ```
-![](https://github.com/abe-/landscape-prediction/raw/master/gifs/gen0-extrapolated.gif)
+<img src="https://github.com/abe-/landscape-prediction/raw/master/gifs/gen0-extrapolated.gif" width="256">
 
 SI HAGO EJEMPLO EDSON:
 With downloaded data, after scraper -> random-distributor
