@@ -167,8 +167,8 @@ def execute_test():
 	# Compare MSE of PredNet predictions vs. using last frame.  Write results to prediction_scores.txt
 	mse_model = np.mean( (X_test[:, 1:] - X_hat[:, 1:])**2 )  # look at all timesteps except the first
 	mse_prev = np.mean( (X_test[:, :-1] - X_test[:, 1:])**2 )
-	if not os.path.exists(RESULTS_SAVE_DIR): os.mkdir(RESULTS_SAVE_DIR)
-	f = open(RESULTS_SAVE_DIR + 'prediction_scores.txt', 'w')
+	if not os.path.exists(RESULTS_DIR): os.mkdir(RESULTS_DIR)
+	f = open(RESULTS_DIR + 'prediction_scores.txt', 'w')
 	f.write("Model MSE: %f\n" % mse_model)
 	f.write("Previous Frame MSE: %f" % mse_prev)
 	f.close()
@@ -178,7 +178,7 @@ def execute_test():
 	plt.figure(figsize = (nt, 2*aspect_ratio))
 	gs = gridspec.GridSpec(2, nt)
 	gs.update(wspace=0., hspace=0.)
-	plot_save_dir = os.path.join(RESULTS_SAVE_DIR, 'prediction_plots/')
+	plot_save_dir = os.path.join(RESULTS_DIR, 'prediction_plots/')
 	if not os.path.exists(plot_save_dir): os.mkdir(plot_save_dir)
 
 	# Output the sequence of all the predicted images
