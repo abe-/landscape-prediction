@@ -10,7 +10,7 @@
 
 - First attemps, with a GAN:
 
-<img src="https://github.com/abe-/landscape-prediction/raw/master/gifs/landscape-prediction-gan-t0.gif" width=768px>
+<img src="https://github.com/abe-/landscape-prediction/raw/master/gifs/landscape-prediction-gan-t0.gif" width=384px>
 
 - Tests with PredNet:
 
@@ -23,11 +23,13 @@
 - ~1 hour (GPU-based) trainings:
 
 <img src="https://github.com/abe-/landscape-prediction/raw/master/gifs/dams-e100.gif" width=768px>
+
 <img src="https://github.com/abe-/landscape-prediction/raw/master/gifs/irrigation-crops.gif" width=768px>
 
 - The importance of data:
 
 <img src="https://github.com/abe-/landscape-prediction/raw/master/gifs/cn-orig-pred.gif" width=768px>
+
 <img src="https://github.com/abe-/landscape-prediction/raw/master/gifs/cn-pred-pred.gif" width=768px>
 
 
