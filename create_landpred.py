@@ -76,4 +76,4 @@ print "Copying utils files..."
 copy2(os.path.join('prednet', 'random_distributor.py'), PROJECT_DIR)
 copy2(os.path.join('historigram_matcher', 'histmatch.sh'), PROJECT_DIR)
 copy2(os.path.join('historigram_matcher', 'recursive-filter.sh'), PROJECT_DIR)
-copy2(os.path.join('image-tiles', 'data-augmentation.sh'), PROJECT_DIR)
+copy2(os.path.join('image-tiles', 'data_augmentation.sh'), PROJECT_DIR)
