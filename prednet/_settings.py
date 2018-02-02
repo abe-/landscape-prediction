@@ -14,8 +14,8 @@ BATCH_SIZE=$batch_size
 LR=$lr
 
 # For the evaluation stage, number of tests and plots:
-NUM_TESTS=$NUM_TESTS
-NUM_PLOTS=$NUM_PLOTS
+NUM_TESTS=$num_tests
+NUM_PLOTS=$num_plots
 
 # Get dir where file is
 current = os.path.dirname(os.path.realpath(__file__))
