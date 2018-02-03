@@ -295,9 +295,9 @@ Sometimes it is useful to "augment" the data. In the context of datasets for ML 
 ```
 sh data_augmentation.sh Data/Train
 ```
----
+----
 
-## Workshop setup info:
+## Workshop setup info:
 
 
 ```
