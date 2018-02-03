@@ -2,11 +2,11 @@
 
 Next Frame Prediction names the experimental set of Machine Learning techniques aimed to algorithmically produce the frame that follows a video stream of images. This approach to video-prediction makes use of convolutional neural networks that, relying on large databases of videos, are able to identify temporal patterns and behaviours within a sequence of frames. This analysis provides them with the capacity of generating future movement and, in consequence, of extending videos with plausible futures.
 
-This project [][1] is conceived as a platform to research on the application of techniques of video prediction to sequences of historical satellital data. Starting from the available timelapses of archived arial images, this platform aims to generate future visions of the surfaces of the Earth where, flattened as video sequences, terraforming activities such as deforestation or urbanisation might be scrutinised as visual feeders for predictive algorithms.
+This project is conceived as a platform to research on the application of techniques of video prediction to sequences of historical satellital data. Starting from the available timelapses of archived arial images, this platform aims to generate future visions of the surfaces of the Earth where, flattened as video sequences, terraforming activities such as deforestation or urbanisation might be scrutinised as visual feeders for predictive algorithms.
 
 The platform wraps and merges together the ConvLSTM [PredNet network](https://github.com/coxlab/prednet) together with tools to work with images (downloading / cleaning / augmenting and enhacing) coming from the timelapses of Google's Earth Engine project. 
 
-This is a project elaborated initially by Abelardo Gil-Fournier as part of the AMT workshop "Surface Value and Landscape Prediction" run by Ryan Bishop, Mihaela Brebenel, Abelardo Gil-Fournier and Jussi Parikka, that took place in Transmediale 18.
+This is a project elaborated initially by Abelardo Gil-Fournier as part of the tranmediale 18 AMT workshop "Surface Value and Landscape Prediction" run together with Ryan Bishop, Mihaela Brebenel and Jussi Parikka.
 
 # Samples
 
@@ -46,7 +46,7 @@ This is a project elaborated initially by Abelardo Gil-Fournier as part of the A
 
 
 
-## Installation
+# Installation
 
 ### 1. Get the platform
 
@@ -67,9 +67,11 @@ sudo pip install virtualenv
 
 In case of Windows, a good guide to install this platform [can be reached here](http://timmyreilly.azurewebsites.net/python-pip-virtualenv-installation-on-windows/).
 
+
 #### git as code and documentation repository
 
 [here's a quick installation guide for Linux/Mac/Win](https://www.atlassian.com/git/tutorials/install-git#linux)
+
 
 ### 2. Clone the project and create its virtual environment
 
@@ -161,7 +163,7 @@ Follow the instructions [here](https://itefix.net/cwrsync)
 
 ---
 
-## How to use this tool
+# How to use this tool
 
 ### 1. Initialize a project
 
@@ -242,49 +244,94 @@ A final script will allow us to produce with the extrap_finetuned model a longar
 python evaluate_future.py Data/Test/0270 -ft 32
 ```
 <img src="https://github.com/abe-/landscape-prediction/raw/master/gifs/gen0-extrapolated.gif" width="256">
-
 ---
 
-## Obtaining temporal sequences of satellite images
+# Obtaining temporal sequences of satellite images
 
-The second part of the settings.py file of a landpred project is devoted to the specification of geographical parameters. In particular, those that are present in a Timelapse url:
+[Google Timelapse](https://earthengine.google.com/timelapse/)
+
+Here's the isolated url of the service:
 ```
 https://earthengine.google.com/iframes/timelapse_player_embed.html#v=40.202477,-101.625939,12.2,latLng&t=1
 https://earthengine.google.com/iframes/timelapse_player_embed.html#v=latitude,longitude,zoom,latLng&t=time
 ```
-If we want to download a specific area, let's say, a sector of the Amazons affected by deforestation, we will need to define that area in terms of a bounding box.
+
+### 1. bbox coordinates in settings.py
+
+The second part of the settings.py file of a landpred project is devoted to the specification of geographical parameters. If we want to download a specific area, let's say for example, a sector of the Amazons affected by deforestation, we will need to define that area in terms of a bounding box.
 <img src="https://github.com/abe-/landscape-prediction/raw/master/gifs/aripuana.png" width="768">
 
+Online tools like [bboxfinder](http://bboxfinder.com/#-12.168226,-62.797852,-10.098670,-61.040039) allow us to find the coordinates of geographical bounding boxes. After verifying that the tool formats the data with the order Lat/Lon (see the options at the right bottom corner), we just need to copy the bbox sequences of coordinates to the following line inside settings.py
+```
+COORDS.append( [lat0, lon0, lat1, lon1] )
+```
+We can add as many bboxes to the file as we want.
 
+After this, we need to choose the appropriate zoom level and specify it also in the file.
 
-SI HAGO EJEMPLO EDSON:
-With downloaded data, after scraper -> random-distributor
-settings : nt 1 batch 1 nseqval 1 samples 1
+### 2. Creating the list of tiles to download
+```
+python tiledcoords.py
+```
+The command will output the size of the grid and the number of tiles to download.
 
+### 3. Downloading
+```
+python scraper-tiled.py
+```
+The downloaded tiles will have been placed inside the Data folder.
 
+### 4. Cleaning the data
 
+Two tools are meant to help in the process of data preparation. A viewer of the downloaded tiles that allows to move those that are not convenient for the dataset to a trash directory, and a recursive image filter that matches historigrams across the sequences and enhances the color levels.
+
+```
+dataset_cleaner is a Processing program, it needs to be opened with Processing.
+```
+```
+sh recursive_filter.sh
+```
+Sometimes it is useful to "augment" the data. In the context of datasets for ML this means to rotate, flip or transform in other ways the original images in order to have a larger set. 
+```
+sh data_augmentation.sh Data/Train
+```
+---
+
+## Workshop setup info:
 
 
 
 Host gnd1
+
 	HostName croopier.ddns.net
+	
 	Port 1180
+	
 	User tm
+	
 	IdentityFile ~/.ssh/tm
 
 Host gnd2
+
 	HostName 35.195.172.252
+	
 	User tm
+	
 	IdentityFile ~/.ssh/tm
 
 Host gnd3
+
 	HostName 35.189.226.77
+	
 	User tm
+	
 	IdentityFile ~/.ssh/tm
 
-
 Host gnd4
+
 	HostName 35.195.99.125
+	
 	User tm
+	
 	IdentityFile ~/.ssh/tm
 
