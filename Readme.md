@@ -2,11 +2,11 @@
 
 Next Frame Prediction names the experimental set of Machine Learning techniques aimed to algorithmically produce the frame that follows a video stream of images. This approach to video-prediction makes use of convolutional neural networks that, relying on large databases of videos, are able to identify temporal patterns and behaviours within a sequence of frames. This analysis provides them with the capacity of generating future movement and, in consequence, of extending videos with plausible futures.
 
-This project is conceived as a platform to research on the application of techniques of video prediction to sequences of historical satellital data. Starting from the available timelapses of archived arial images, this platform aims to generate future visions of the surfaces of the Earth where, flattened as video sequences, terraforming activities such as deforestation or urbanisation might be scrutinised as visual feeders for predictive algorithms.
+This project [][1] is conceived as a platform to research on the application of techniques of video prediction to sequences of historical satellital data. Starting from the available timelapses of archived arial images, this platform aims to generate future visions of the surfaces of the Earth where, flattened as video sequences, terraforming activities such as deforestation or urbanisation might be scrutinised as visual feeders for predictive algorithms.
 
 The platform wraps and merges together the ConvLSTM [PredNet network](https://github.com/coxlab/prednet) together with tools to work with images (downloading / cleaning / augmenting and enhacing) coming from the timelapses of Google's Earth Engine project. 
 
-It is a project elaborated initially by Abelardo Gil-Fournier as part of the AMT workshop "Surface Value and Landscape Prediction" that took place in Transmediale 18.
+This is a project elaborated initially by Abelardo Gil-Fournier as part of the AMT workshop "Surface Value and Landscape Prediction" run by Ryan Bishop, Mihaela Brebenel, Abelardo Gil-Fournier and Jussi Parikka, that took place in Transmediale 18.
 
 # Samples
 
@@ -159,8 +159,11 @@ brew install rsync
 If WINDOWS:
 Follow the instructions [here](https://itefix.net/cwrsync)
 
+---
 
-## First step: Initialize a project
+## How to use this tool
+
+### 1. Initialize a project
 
 The basic entity of this Landscape Prediction platform is the landpred project. A landpred project is a structure of files and folders aimed to ease the creation of landscape predictions. It encapsulates both the datasets and the neural network within a single directory so that it can be easily transfered to remote training computers and obtain back their results.
 
@@ -176,7 +179,7 @@ Exports/
 ```
 where the datasets, the obtained models and the prediction results will be stored, respectively.
 
-## Second step: prepare a set of sample data
+### 2. Prepare a dataset
 
 The folder "sample-data" contains a dataset of images of a procedurally animated animation. The source code of the generator, written in Processing, is also available.
 
@@ -184,7 +187,7 @@ To train a model with this data, you need to copy these 3 directories (Train, Te
 ```
 cp -r ../../sample-data/* Data/
 ```
-Now we might adjust some settings of our training process. This can be done by editing the settings.py file. For instance, in our case we want the model to work with files of size 64z64px (default is 128x128) and with a learning rate LR of 0.001 (default is 0.002). We edit settings.py and change the corresponding lines:
+Now we might adjust some settings of the training process. This can be done by editing the settings.py file. For instance, in our case we want the model to work with files of size 64z64px (default is 128x128) and with a learning rate LR of 0.001 (default is 0.002). We edit settings.py and change the corresponding lines:
 ```
 WIDTH=64
 HEIGHT= 64
@@ -197,7 +200,7 @@ python process_data.py
 ```
 It will transform the images into matrices of numbers that will be conveniently store insided the Data folder as well.
 
-## Third step: 
+### 3. Train the model 
 
 Now we are able to train a model with these data:
 ```
@@ -211,7 +214,7 @@ python  extrap_finetune.py
 ```
 This will create two additional Model files, the ones corresponding to the finetuned model.
 
-## Fourth step: evaluate the model
+### 4. Evaluate the model
 
 Finally, we need to test the model. To evaluate what the neural network has learnt we need to run:
 ```
@@ -221,7 +224,7 @@ where EXTRAP_FRAME is the frame number from where extrapolation will start to be
 
 This will produce a set of tests and plots displaying the prediction against the actual frames (the so-called "ground truth").
 
-<img src="https://github.com/abe-/landscape-prediction/raw/master/gifs/plot-4.png">
+<img src="https://github.com/abe-/landscape-prediction/raw/master/gifs/plot_4.png">
 
 The tests can be reviewed with a simple processing tool, "tests_viewer", that will animate the results:
 
@@ -231,13 +234,28 @@ To export either the visualisations produced by this tool or the tiles themselve
 ```
 convert g???.png  -set delay 25  cn-orig-pred.gif
 ```
-## Fifth step: produce a longer extrapolation of the prediction
+
+### 5. How to produce a longer extrapolation of the prediction
 
 A final script will allow us to produce with the extrap_finetuned model a longar extrapolation:
 ```
 python evaluate_future.py Data/Test/0270 -ft 32
 ```
 <img src="https://github.com/abe-/landscape-prediction/raw/master/gifs/gen0-extrapolated.gif" width="256">
+
+---
+
+## Obtaining temporal sequences of satellite images
+
+The second part of the settings.py file of a landpred project is devoted to the specification of geographical parameters. In particular, those that are present in a Timelapse url:
+```
+https://earthengine.google.com/iframes/timelapse_player_embed.html#v=40.202477,-101.625939,12.2,latLng&t=1
+https://earthengine.google.com/iframes/timelapse_player_embed.html#v=latitude,longitude,zoom,latLng&t=time
+```
+If we want to download a specific area, let's say, a sector of the Amazons affected by deforestation, we will need to define that area in terms of a bounding box.
+<img src="https://github.com/abe-/landscape-prediction/raw/master/gifs/aripuana.png" width="768">
+
+
 
 SI HAGO EJEMPLO EDSON:
 With downloaded data, after scraper -> random-distributor
