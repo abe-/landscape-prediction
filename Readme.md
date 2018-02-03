@@ -300,38 +300,25 @@ sh data_augmentation.sh Data/Train
 ## Workshop setup info:
 
 
-
+```
 Host gnd1
-
 	HostName croopier.ddns.net
-	
 	Port 1180
-	
 	User tm
-	
 	IdentityFile ~/.ssh/tm
 
 Host gnd2
-
 	HostName 35.195.172.252
-	
 	User tm
-	
 	IdentityFile ~/.ssh/tm
-
+	
 Host gnd3
-
 	HostName 35.189.226.77
-	
 	User tm
-	
 	IdentityFile ~/.ssh/tm
 
 Host gnd4
-
 	HostName 35.195.99.125
-	
 	User tm
-	
 	IdentityFile ~/.ssh/tm
-
+```
