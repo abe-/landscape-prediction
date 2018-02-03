@@ -72,6 +72,7 @@ In case of Windows, a good guide to install this platform [can be reached here](
 [here's a quick installation guide for Linux/Mac/Win](https://www.atlassian.com/git/tutorials/install-git#linux)
 
 ### 2. Clone the project and create its virtual environment
+
 To retrieve the updated version of this project you need to clone this repository:
 ```
 git clone https://github.com/abe-/landscape-prediction.git
@@ -210,7 +211,7 @@ python  extrap_finetune.py
 ```
 This will create two additional Model files, the ones corresponding to the finetuned model.
 
-## Fourth step: evaluate the model:
+## Fourth step: evaluate the model
 
 Finally, we need to test the model. To evaluate what the neural network has learnt we need to run:
 ```
@@ -226,11 +227,10 @@ The tests can be reviewed with a simple processing tool, "tests_viewer", that wi
 
 <img src="https://github.com/abe-/landscape-prediction/raw/master/gifs/gen0.gif" width="768">
 
-To export either the visualisations of this tool or the tiles themselves as a gif we have the nice convert tool provided by imagemagick:
+To export either the visualisations produced by this tool or the tiles themselves as a gif animation we have the convert tool provided by imagemagick:
 ```
 convert g???.png  -set delay 25  cn-orig-pred.gif
 ```
-
 ## Fifth step: produce a longer extrapolation of the prediction
 
 A final script will allow us to produce with the extrap_finetuned model a longar extrapolation:
