@@ -125,19 +125,19 @@ Tensorflow installation steps can be found [here](https://www.tensorflow.org/ver
 
 If LINUX with CPU only:
 ```
-pip install - -upgrade https://storage.googleapis.com/tensorflow/linux/cpu/tensorflow-1.2.1-cp27-none-linux_x86_64.whl
+pip install --upgrade https://storage.googleapis.com/tensorflow/linux/cpu/tensorflow-1.2.1-cp27-none-linux_x86_64.whl
 ```
 If LINUX with GPU:
 ```
-pip install - -upgrade https://storage.googleapis.com/tensorflow/linux/gpu/tensorflow_gpu-1.2.1-cp27-none-linux_x86_64.whl
+pip install --upgrade https://storage.googleapis.com/tensorflow/linux/gpu/tensorflow_gpu-1.2.1-cp27-none-linux_x86_64.whl
 ```
 If MAC with CPU only:
 ```
-pip install - -upgrade https://storage.googleapis.com/tensorflow/mac/cpu/tensorflow-1.2.1-py2-none-any.whl
+pip install --upgrade https://storage.googleapis.com/tensorflow/mac/cpu/tensorflow-1.2.1-py2-none-any.whl
 ```
 if MAC with GPU: (tensor flow v. 1.1 !!)
 ```
-pip install - -upgrade https://storage.googleapis.com/tensorflow/mac/gpu/tensorflow_gpu-1.1.0-py2-none-any.whl
+pip install --upgrade https://storage.googleapis.com/tensorflow/mac/gpu/tensorflow_gpu-1.1.0-py2-none-any.whl
 ```
 Now we proceed with the installation of Keras (and other dependencies that will be installed as well):
 ```
