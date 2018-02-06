@@ -146,7 +146,7 @@ pip install hickle
 pip install matplotlib
 pip install pillow
 ```
-### 5. Finally, rsync to transfer files between computers
+### 5. Finally, rsync to transfer files between computers
 
 rsync is one of the fastests way to transfer files among computers:
 
