@@ -23,8 +23,8 @@ root, folders, files = os.walk( TRAIN_DIR ).next()
 # Define number of sequences in each of the main dirs
 
 tot = len(folders)
-num_val = min(1,int(tot*0.15))
-num_test = min(1,max(18,tot*0.1));
+num_val = max(1,int(tot*0.15))
+num_test = max(1,min(18,tot*0.1));
 
 # Create the folders if needed
 
