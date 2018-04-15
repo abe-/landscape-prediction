@@ -61,7 +61,7 @@ with open( os.path.join(PROJECT_DIR, 'settings.py'), 'w') as f:
 
 print "Copying PredNet files..."
 copy2(os.path.join('prednet', 'data_utils.py'), PROJECT_DIR)
-copy2(os.path.join('prednet', 'evaluate_future.py'), PROJECT_DIR)
+copy2(os.path.join('prednet', 'predict.py'), PROJECT_DIR)
 copy2(os.path.join('prednet', 'evaluate.py'), PROJECT_DIR)
 copy2(os.path.join('prednet', 'extrap_finetune.py'), PROJECT_DIR)
 copy2(os.path.join('prednet', 'keras_utils.py'), PROJECT_DIR)
