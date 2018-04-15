@@ -24,7 +24,7 @@ root, folders, files = os.walk( TRAIN_DIR ).next()
 
 tot = len(folders)
 num_val = max(1,int(tot*0.15))
-num_test = max(1,min(18,tot*0.1));
+num_test = max(1,min(18,int(tot*0.1)));
 
 # Create the folders if needed
 
