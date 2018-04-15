@@ -196,7 +196,7 @@ def execute_test():
 	for test in range(numtests):
 	    testdir = os.path.join("single/", testdir_name)
 	    testdir = os.path.join(plot_save_dir, testdir)
-	    if not os.path.exists( testdir ) : os.mkdir( testdir )
+	    if not os.path.exists( testdir ) : os.makedirs( testdir )
 	    print "///////// NT: "+str(nt)
 	    for t in range(nt):
 		imsave( testdir + "/pred-%02d.png" % (t,), X_hat[test,t] )
