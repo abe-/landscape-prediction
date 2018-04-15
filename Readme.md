@@ -16,7 +16,7 @@ This is a project elaborated initially by Abelardo Gil-Fournier as part of the t
 
 - Video prediction:
 
-<img src="https://github.com/abe-/landscape-prediction/raw/master/gifs/gen0-irregular.gif" width=768px>
+<img src="https://github.com/abe-/landscape-prediction/raw/master/gifs/diffusion-64.gif" width=768px>
 
 - First attemps, with a GAN:
 
