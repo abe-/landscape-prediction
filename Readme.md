@@ -241,7 +241,7 @@ convert g???.png  -set delay 25  cn-orig-pred.gif
 
 A final script will allow us to produce with the extrap_finetuned model a longer extrapolation:
 ```
-# python evaluate_future.py dir_of_test_imgs -pf number_of_frames_to_predict 
+# python predict.py dir_of_test_imgs -pf number_of_frames_to_predict 
 
 python evaluate_future.py Data/Test/0270 -pf 32
 ```
