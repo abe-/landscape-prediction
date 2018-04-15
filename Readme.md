@@ -239,11 +239,12 @@ convert g???.png  -set delay 25  cn-orig-pred.gif
 
 ### 5. How to produce a longer extrapolation of the prediction
 
-A final script will allow us to produce with the extrap_finetuned model a longar extrapolation:
+A final script will allow us to produce with the extrap_finetuned model a longer extrapolation:
 ```
-python evaluate_future.py Data/Test/0270 -ft 32
+# python evaluate_future.py dir_of_test_imgs -pf number_of_frames_to_predict 
+python evaluate_future.py Data/Test/0270 -pf 32
 ```
-<img src="https://github.com/abe-/landscape-prediction/raw/master/gifs/gen0-extrapolated.gif" width="256">
+<img src="https://github.com/abe-/landscape-prediction/raw/master/gifs/waves.gif" width="256">
 ---
 
 # Obtaining temporal sequences of satellite images
