@@ -1,6 +1,7 @@
 '''
 This file merges together prepare_ and _evaluate
 TODO: refactor into usable objects across the platform
+TODO: forces 32 predicted frames only
 '''
 
 
@@ -30,12 +31,14 @@ from settings import *
 
 
 batch_size = BATCH_SIZE
-nt = NT
+nt = None
 numtests = 1
 extrap = None
+predicted_frames = None
+testdir_name = None
 
 parser = argparse.ArgumentParser()
-parser.add_argument('-ft', help="fine-tune multistep: number of the first predicted frame")
+parser.add_argument('-pf', help="pf: number of the predicted frames to generate")
 parser.add_argument('dir', metavar="DIR", type=str, nargs=1, help="dir of the input images")
 args=parser.parse_args()
 
@@ -46,14 +49,18 @@ json_file = os.path.join(MODELS_DIR, 'prednet_ee_model.json')
 test_file = os.path.join(DATA_DIR, 'X_single.hkl')
 test_sources = os.path.join(DATA_DIR, 'sources_single.hkl')
 
-if args.ft is not None:
-	extrap = int(args.ft)
-	weights_file = os.path.join(MODELS_DIR, 'prednet_ee_weights-extrapfinetuned.hdf5')
-	json_file = os.path.join(MODELS_DIR, 'prednet_ee_model-extrapfinetuned.json')
-	nt = extrap+32
-
 if args.dir is not None:
 	inputdir = args.dir[0]
+	testdir_name = os.path.basename(os.path.normpath(inputdir))
+	for _, _, files in os.walk(inputdir):
+		filecount = len(files)
+	extrap = filecount
+
+if args.pf is not None:
+	predicted_frames = int(args.pf)
+	nt = extrap + predicted_frames
+	weights_file = os.path.join(MODELS_DIR, 'prednet_ee_weights-extrapfinetuned.hdf5')
+	json_file = os.path.join(MODELS_DIR, 'prednet_ee_model-extrapfinetuned.json')
 
 
 # Create tmpdir if it does not exist
@@ -74,25 +81,29 @@ for f in os.listdir(tmpdir):
 
 # Move input files to tmp dir
 def copy_to_tmp():
+	print "Preparing to copy files to tmp..."
 	print "[DEBUG] Input dir: " + inputdir
+	fc = 0
 	for root, _, files in os.walk(inputdir):
+		fc = len(files)
 		for f in files:
 			name = os.path.join(root,f)
 			copy2(name, tmpdir)
-
+	
 	for root, _, files in os.walk(tmpdir):
 		file_count = len(files)
 		last = files[-1]
 		for i in range(file_count, nt):
 			name1 = os.path.join(tmpdir,last)
-			name2 = os.path.join(tmpdir,"extra-"+"%02d" % i+",png")
+			name2 = os.path.join(tmpdir,"extra-"+"%02d" % i+".png")
 			copy2(name1, name2)
 
-
+	print "...files copied to tmp"
 
 
 # Create image datasets.
 def process_data():
+	print "Preparing to process test data..."
 	desired_im_sz = (HEIGHT, WIDTH)
 	categories = ['all']
 
@@ -120,7 +131,7 @@ def process_data():
 
 		hkl.dump(X, os.path.join(DATA_DIR, 'X_' + split + '.hkl'))
 		hkl.dump(source_list, os.path.join(DATA_DIR, 'sources_' + split + '.hkl'))
-
+	print "...Processed single test data"
 
 
 
@@ -137,7 +148,7 @@ def process_im(im, desired_sz):
 
 # Execute a test with the files in the folder
 def execute_test():
-
+	print "Preparing to execute the test..."
 	# Load trained model
 	f = open(json_file, 'r')
 	json_string = f.read()
@@ -168,7 +179,7 @@ def execute_test():
 	mse_model = np.mean( (X_test[:, 1:] - X_hat[:, 1:])**2 )  # look at all timesteps except the first
 	mse_prev = np.mean( (X_test[:, :-1] - X_test[:, 1:])**2 )
 	if not os.path.exists(RESULTS_DIR): os.mkdir(RESULTS_DIR)
-	f = open(RESULTS_DIR + 'prediction_scores.txt', 'w')
+	f = open(os.path.join(RESULTS_DIR, 'prediction_scores.txt'), 'w')
 	f.write("Model MSE: %f\n" % mse_model)
 	f.write("Previous Frame MSE: %f" % mse_prev)
 	f.close()
@@ -183,13 +194,14 @@ def execute_test():
 
 	# Output the sequence of all the predicted images
 	for test in range(numtests):
-	    testdir = "tile-" + str(test)
+	    testdir = os.path.join("single/", testdir_name)
 	    testdir = os.path.join(plot_save_dir, testdir)
 	    if not os.path.exists( testdir ) : os.mkdir( testdir )
+	    print "///////// NT: "+str(nt)
 	    for t in range(nt):
 		imsave( testdir + "/pred-%02d.png" % (t,), X_hat[test,t] )
 		imsave( testdir + "/orig-%02d.png" % (t,), X_test[test,t])
-
+	print "Test data saved in " + testdir
 
 
 
