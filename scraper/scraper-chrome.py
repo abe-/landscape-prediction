@@ -99,7 +99,7 @@ for count in range(len(points)):
         driver.execute_script("var i3=document.getElementsByClassName('sideToolBar')[0];if(i3) i3.style.display='none';")
         driver.execute_script("var i4=document.getElementsByClassName('customControl')[0];if(i4) i4.style.display='none';")
 
-        fn = os.path.join(outputdir, folder, "{:03.0f}".format(frame) + ".png")
+        fn = os.path.join(outputdir, folder, "{:03.0f}".format(frame) + ".jpg")
         driver.save_screenshot(fn)
 
     driver.quit()
@@ -120,13 +120,13 @@ for count in range(len(points)):
         # if divide into 32 tiles:
         if numtiles == 32:
 
-            cmd ="convert "+ f + " -crop 4x2@ +repage +adjoin "+ os.path.join(outputdir,folder+"-%d","{:03.0f}".format(frame) + ".png")
+            cmd ="convert "+ f + " -crop 4x2@ +repage +adjoin "+ os.path.join(outputdir,folder+"-%d","{:03.0f}".format(frame) + ".jpg")
             subprocess.call(cmd,shell=True)
 
         # if divide into 2 tiles
         elif numtiles == 2:
 
-            cmd ="convert "+ f + " -crop 2x1@ +repage +adjoin "+ os.path.join(outputdir,folder+"-%d","{:03.0f}".format(frame) + ".png")
+            cmd ="convert "+ f + " -crop 2x1@ +repage +adjoin "+ os.path.join(outputdir,folder+"-%d","{:03.0f}".format(frame) + ".jpg")
             subprocess.call(cmd,shell=True)
 
         # if only one tile:

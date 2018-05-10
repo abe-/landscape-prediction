@@ -111,7 +111,7 @@ for count in range(len(points)):
         driver.execute_script("var i3=document.getElementsByClassName('sideToolBar')[0];if(i3) i3.style.display='none';")
         driver.execute_script("var i4=document.getElementsByClassName('customControl')[0];if(i4) i4.style.display='none';")
 
-        fn = os.path.join(outputdir, folder, "{:03.0f}".format(frame) + ".png")
+        fn = os.path.join(outputdir, folder, "{:03.0f}".format(frame) + ".jpg")
         driver.save_screenshot(fn)
 
     driver.quit()

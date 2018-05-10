@@ -11,6 +11,7 @@ from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.proxy import *
 from time import sleep
 from settings import *
+from PIL import Image
 
 
 
@@ -123,9 +124,20 @@ for count in range(len(points)):
     ct = 0
     for f in files:
         print "Croping frame " + str(ct)
-        f = os.path.join( tfold, f )
-        #cmd ="convert "+ f + " -crop 256x256+96+96 "+ f
-        cmd = "convert " + f + " -resize 128x128! " + f
-        subprocess.call(cmd,shell=True)
+        maxdim = max(WIDTH,HEIGHT)
+
+	path_downloaded = os.path.join( tfold, f )
+        im = Image.open(path_downloaded)
+	region = im.resize((maxdim, maxdim),Image.BICUBIC)
+
+	fname = os.path.splitext(f)[0]
+	path_frame = os.path.join(tfold, fname+".jpg");
+
+	region.save(path_frame, 'JPEG', optimize=True, quality=95)
+	os.remove(path_downloaded)
+
+	#cmd ="convert "+ f + " -crop 256x256+96+96 "+ f
+        #cmd = "convert " + f + " -resize 128x128! " + f
+        #subprocess.call(cmd,shell=True)
         ct = ct + 1
 display.stop()

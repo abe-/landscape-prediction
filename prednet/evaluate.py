@@ -98,7 +98,7 @@ for i in plot_idx:
         plt.tick_params(axis='both', which='both', bottom='off', top='off', left='off', right='off', labelbottom='off', labelleft='off')
         if t==0: plt.ylabel('Predicted', fontsize=10)
 
-    plt.savefig(plot_save_dir +  'plot_' + str(i) + '.png')
+    plt.savefig(plot_save_dir +  'plot_' + str(i) + '.jpg')
     plt.clf()
 
 #abe
@@ -107,5 +107,5 @@ for test in range(numtests):
     testdir = os.path.join(plot_save_dir, testdir)
     if not os.path.exists( testdir ) : os.mkdir( testdir )
     for t in range(nt):
-	imsave( testdir + "/pred-%02d.png" % (t,), X_hat[test,t] )
-	imsave( testdir + "/orig-%02d.png" % (t,), X_test[test,t])
+	imsave( testdir + "/pred-%02d.jpg" % (t,), X_hat[test,t] )
+	imsave( testdir + "/orig-%02d.jpg" % (t,), X_test[test,t])

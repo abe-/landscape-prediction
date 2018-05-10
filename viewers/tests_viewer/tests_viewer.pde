@@ -42,9 +42,9 @@ void folderSelected(File selection) {
       for (int t = 0; t < NT; t++) { 
         String name = folders.get(j).getName();
         String path = new File(basedir, name).toString();
-        String img = new File(path, "pred-"+nf(t, 2) + ".png").toString();
+        String img = new File(path, "pred-"+nf(t, 2) + ".jpg").toString();
         if (t < extrap) 
-        img = new File(path, "orig-"+nf(t, 2) + ".png").toString(); 
+        img = new File(path, "orig-"+nf(t, 2) + ".jpg").toString(); 
        
         pred[j][t] = loadImage(img);
         println("hola" + img);
@@ -108,7 +108,7 @@ void draw() {
 
     if (gif) {
       auto = false;
-      saveFrame("g###.png");
+      saveFrame("g###.jpg");
       fr = frameCount-fr0;
       if (fr > NT-1) {
         noLoop();

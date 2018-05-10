@@ -95,7 +95,7 @@ def copy_to_tmp():
 		last = files[-1]
 		for i in range(file_count, nt):
 			name1 = os.path.join(tmpdir,last)
-			name2 = os.path.join(tmpdir,"extra-"+"%02d" % i+".png")
+			name2 = os.path.join(tmpdir,"extra-"+"%02d" % i+".jpg")
 			copy2(name1, name2)
 
 	print "...files copied to tmp"
@@ -199,10 +199,9 @@ def execute_test():
 	    if not os.path.exists( testdir ) : os.makedirs( testdir )
 	    print "///////// NT: "+str(nt)
 	    for t in range(nt):
-		imsave( testdir + "/pred-%02d.png" % (t,), X_hat[test,t] )
-		imsave( testdir + "/orig-%02d.png" % (t,), X_test[test,t])
+		imsave( testdir + "/pred-%02d.jpg" % (t,), X_hat[test,t] )
+		imsave( testdir + "/orig-%02d.jpg" % (t,), X_test[test,t])
 	print "Test data saved in " + testdir
-
 
 
 # main loop
