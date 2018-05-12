@@ -84,7 +84,10 @@ for count in range(len(points)):
     id = str(point["id"])	
     lat = str(point["latitude"])
     lng = str(point["longitude"])
-    zoom = str(point["zoom"])
+    if "zoom" not in point:
+	zoom = str(ZOOM)
+    else:
+	zoom = str(point["zoom"])
 
     print "---"
     print id  + "," + lat + "," + lng + "," + zoom
