@@ -2,32 +2,17 @@ import json
 import os
 import sys, argparse
 import subprocess
-from pyvirtualdisplay import Display
+#from pyvirtualdisplay import Display
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.proxy import *
 from time import sleep
 from settings import *
 from PIL import Image
-
-
-####################
-#  INITIAL SETUP
-#
-
-
-# setup of headless xvfb display
-
-# firefox: 512x512 -> ( 585, 669 )
-
-display = Display(visible=0, size=(585, 669))
-display.start()
-
-
-
 
 
 ####################
@@ -48,8 +33,13 @@ class canvas_check():
 # Creates a browser instance that goes through a proxy
 
 def open_browser():
-    driver = webdriver.Firefox()
-    #driver = webdriver.Firefox().fullscreen_window();
+    dcap = dict(DesiredCapabilities.PHANTOMJS)
+    dcap["phantomjs.page.settings.userAgent"] = (
+    "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/53 "
+    "(KHTML, like Gecko) Chrome/15.0.87"
+    )
+    driver = webdriver.PhantomJS(executable_path="/Users/agfm1n14/Downloads/phantomjs-2.1.1-macosx/bin/phantomjs",desired_capabilities=dcap)
+    driver.set_window_size(512,512)
     return driver
 
 
@@ -72,14 +62,14 @@ if args.json and os.path.exists(args.json):
 else:
     points = json.load(open(KEY+".json"))
 
-outputdir = TRAIN_DIR
+outputdir = os.path.join(TRAIN_DIR)
 if not os.path.exists(outputdir): os.makedirs(outputdir)
 
 count = 0
 for count in range(len(points)):
   if count > -1:
     point = points[count]
-    folder = KEY + "-" + point["id"]
+    folder = KEY + "-" + str(point["id"])
 
     tfold = os.path.join(outputdir, folder)
     if not os.path.exists(tfold): os.makedirs(tfold)
@@ -88,7 +78,7 @@ for count in range(len(points)):
     lng = str(point["longitude"])
 
     print "---"
-    print point["id"] + "," + lat + "," + lng
+    print folder + "," + lat + "," + lng
 
     driver = open_browser()
 
@@ -115,26 +105,23 @@ for count in range(len(points)):
         driver.save_screenshot(fn)
 
     driver.quit()
+
     
     _, _, files = os.walk( tfold ).next()
+    
     ct = 0
     for f in files:
         print "Croping frame " + str(ct)
         maxdim = max(WIDTH,HEIGHT)
+        box = (0, 0, maxdim, maxdim)
 
-	path_downloaded = os.path.join( tfold, f )
+        path_downloaded = os.path.join( tfold, f )
         im = Image.open(path_downloaded)
-	region = im.resize((maxdim, maxdim),Image.BICUBIC)
+        region = im.crop(box)
+        fname = os.path.splitext(f)[0]
+        path_frame = os.path.join(tfold, fname+".jpg");
 
-	fname = os.path.splitext(f)[0]
-	path_frame = os.path.join(tfold, fname+".jpg");
+        region.save(path_frame, 'JPEG', optimize=True, quality=95)
+        os.remove(path_downloaded)
 
-	region.save(path_frame, 'JPEG', optimize=True, quality=95)
-	os.remove(path_downloaded)
-
-	#cmd ="convert "+ f + " -crop 256x256+96+96 "+ f
-        #cmd = "convert " + f + " -resize 128x128! " + f
-        #subprocess.call(cmd,shell=True)
-    ct = ct + 1
-
-display.stop()
+        ct = ct + 1
