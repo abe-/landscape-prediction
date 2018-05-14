@@ -74,6 +74,7 @@ copy2(os.path.join('scraper', 'scraper-tiled.py'), PROJECT_DIR)
 copy2(os.path.join('scraper', 'scraper-chrome.py'), PROJECT_DIR)
 copy2(os.path.join('scraper', 'scraper-ff.py'), PROJECT_DIR)
 print "Copying utils files..."
+copy2(os.path.join('prednet', 'augment.py'), PROJECT_DIR)
 copy2(os.path.join('prednet', 'random_distributor.py'), PROJECT_DIR)
 copy2(os.path.join('historigram_matcher', 'histmatch.sh'), PROJECT_DIR)
 copy2(os.path.join('historigram_matcher', 'recursive-filter.sh'), PROJECT_DIR)
