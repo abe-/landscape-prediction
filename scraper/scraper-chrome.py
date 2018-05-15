@@ -11,7 +11,7 @@ from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.proxy import *
 from time import sleep
 from settings import *
-
+from PIL import Image
 
 
 ####################
@@ -67,22 +67,31 @@ count = 0
 for count in range(len(points)):
   if count > -1:
     point = points[count]
-    folder = KEY + "-" + point["id"]
+
+    if "id" not in point:
+        id = str(count)
+    else:
+        id = str(point["id"])
+    lat = str(point["latitude"])
+    lng = str(point["longitude"])
+    if "zoom" not in point:
+	zoom = str(ZOOM)
+    else:
+	zoom = str(point["zoom"])
+
+    print "---"
+    print id + "," + lat + "," + lng + "," + zoom
+
+    folder = KEY + "-" + id
 
     tfold = os.path.join(outputdir, folder)
     if not os.path.exists(tfold): os.makedirs(tfold)
-
-    lat = str(point["latitude"])
-    lng = str(point["longitude"])
-
-    print "---"
-    print folder + "," + lat + "," + lng
 
     driver = open_browser()
 
     for frame in range(0, 33):
 
-        url="https://earthengine.google.com/iframes/timelapse_player_embed.html#v="+lat+","+lng+","+str(ZOOM)+",latLng&t="+"{:.1f}".format(frame/10.)
+        url="https://earthengine.google.com/iframes/timelapse_player_embed.html#v="+lat+","+lng+","+zoom+",latLng&t="+"{:.1f}".format(frame/10.)
         driver.get(url)
 
         try:
@@ -99,39 +108,25 @@ for count in range(len(points)):
         driver.execute_script("var i3=document.getElementsByClassName('sideToolBar')[0];if(i3) i3.style.display='none';")
         driver.execute_script("var i4=document.getElementsByClassName('customControl')[0];if(i4) i4.style.display='none';")
 
-        fn = os.path.join(outputdir, folder, "{:03.0f}".format(frame) + ".jpg")
+        fn = os.path.join(outputdir, folder, "{:03.0f}".format(frame) + ".png")
         driver.save_screenshot(fn)
 
     driver.quit()
 
     _, _, files = os.walk( tfold ).next()
     ct = 0
-    numtiles = 0
     for f in files:
         print "Croping frame " + str(ct)
-        f = os.path.join( tfold, f )
+        maxdim = max(WIDTH,HEIGHT)
 
-        for tile in range(numtiles):
-                tiledir = os.path.join(outputdir, folder+"-"+str(tile))
-                if not os.path.exists(tiledir):
-                        os.makedirs(tiledir)
+    	path_downloaded = os.path.join( tfold, f )
+        im = Image.open(path_downloaded)
+        region = im.resize((maxdim, maxdim),Image.BICUBIC)
 
+        fname = os.path.splitext(f)[0]
+        path_frame = os.path.join(tfold, fname+".jpg");
 
-        # if divide into 32 tiles:
-        if numtiles == 32:
-
-            cmd ="convert "+ f + " -crop 4x2@ +repage +adjoin "+ os.path.join(outputdir,folder+"-%d","{:03.0f}".format(frame) + ".jpg")
-            subprocess.call(cmd,shell=True)
-
-        # if divide into 2 tiles
-        elif numtiles == 2:
-
-            cmd ="convert "+ f + " -crop 2x1@ +repage +adjoin "+ os.path.join(outputdir,folder+"-%d","{:03.0f}".format(frame) + ".jpg")
-            subprocess.call(cmd,shell=True)
-
-        # if only one tile:
-        else:
-            cmd ="convert "+ f + " -resize 128x128! " + f
-            subprocess.call(cmd,shell=True)
+        region.save(path_frame, 'JPEG', optimize=True, quality=95)
+        os.remove(path_downloaded)
 
         ct = ct + 1
